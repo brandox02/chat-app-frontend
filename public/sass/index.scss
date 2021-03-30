@@ -1,0 +1,31 @@
+@import '../sass/variables';
+@import '../sass/utils';
+@import '../sass/generators';
+
+//sobreescribiendo de bootstrap
+$primary: #6C3483 !default;
+$secondary: #361A42 !default;
+
+//----------------------------------------------------------------------------------------------------------------------
+//GENERAL STYLES
+body *{
+    @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+    font-family: 'Josefin Sans', sans-serif;
+
+    
+}
+
+.d-hidden-chat{
+    @media (min-width: 0px) {
+        display: none;
+    }  
+    @media (min-width: 768px) {
+        display: block;
+    }  
+}
+
+.d-hidden{
+    display: none;
+}
+
+@import '../../node_modules/bootstrap/scss/bootstrap.scss';

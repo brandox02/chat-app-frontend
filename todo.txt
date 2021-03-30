@@ -1,0 +1,9 @@
+* Add that when search user it deleted the view ViewChat
+
+* Add spinner when the user deleted a chat
+
+* Add socket.io to get real-time for example when the user send message to other user
+
+* Change system of setView, it maybe can implement the react-router-dom and put it in redux
+
+* Add LogOut function

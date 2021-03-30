@@ -1,0 +1,5 @@
+chat component
+
+SEND MESSAGE: when click it in send message button, send new message to chat active to API then reload the component.
+
+
