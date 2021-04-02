@@ -8,19 +8,19 @@ interface IChatCard {
     text: string
 }
 
-const ChatCard = ({ name, urlImageProfile,text }: IChatCard) => {
-    
+const ChatCard = ({ name, urlImageProfile, text }: IChatCard) => {
+
     const { setView } = useContext(context)
 
     const handler = () => {
         setView(VIEWS.VIEW_CHAT.value);
     }
-    useEffect(()=>{
-        
-    },[])
+    useEffect(() => {
+
+    }, [])
     return (
-        <div className=' pr-2 pl-1 mb-3' onClick={handler} >
-            <div className='d-flex flex-nowrap border-shadow w-100 my-2 p-2' style={{ backgroundColor: '#F9F6FA' }}>
+        <div className=' pr-2 pl-1 mb-3 '  onClick={handler} >
+            <div className='d-flex flex-nowrap border-shadow w-100 my-2 p-2 overflow-hidden' style={{ backgroundColor: '#F9F6FA' }}>
                 <div className='mx-2'>
                     <img src={fotoPerfil} className='rounded-circle ' width='50px' alt="foto del contacto" />
                 </div>

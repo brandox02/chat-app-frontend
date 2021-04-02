@@ -1,12 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import fotoPerfil from '../../images/foto-perfil.png';
 import ChatCard from './ChatCard';
-import { GlobalDispatch, GlobalState } from '../../redux/types';
-import { connect } from 'react-redux';
-import { mapStateToProps, mapDispatchToProps } from '../../redux/maps/indexMap';
 import { useDebounce } from 'use-debounce';
+import { setUsersSearchModeActivesSync } from '../../redux/actions/SearchUsersActions/setUsersSearchActiveMode';
+import { useDispatch, useSelector } from 'react-redux';
+import { State } from '../../redux/types/index';
+import { UserState } from '../../redux/types/users';
+import { ChatsState } from '../../redux/types/chats';
+import { UsersSearchState } from '../../redux/types/usersSearch';
+import { findChatApi } from '../../redux/actions/chatActions/findChatApi';
+import { ChatState } from '../../redux/types/chat';
+import { setIndexUserSearchedSelected } from '../../redux/actions/SearchUsersActions/setIndexUserSearchedSelected';
+import { searchUsersApiByusername } from '../../redux/actions/SearchUsersActions/UsersSearch';
 
-function ViewListaChat(props: GlobalDispatch & GlobalState) {
+function ViewListaChat() {
+
+    const dispatch = useDispatch();
+    const userState: UserState = useSelector((state: State) => state.user);
+    const chatsState: ChatsState = useSelector((state: State) => state.chats);
+    const chatState: ChatState = useSelector((state: State) => state.chat);
+    const searchUsersState: UsersSearchState = useSelector((state: State) => state.searchUsers);
+
     // texto del input search
     const [inputSearch, setInputSearch] = useState('');
     // debounce para que se haga la solicitud al api cuando el usuario termine de escribir
@@ -20,12 +34,12 @@ function ViewListaChat(props: GlobalDispatch & GlobalState) {
             // validacion para que no haga el fetch cuando cargue el componente principalmente y tambien para que no haga fetch si el usuario no tiene nada
             if (inputSearch === '') {
                 // cambiamos el modo a no search para que renderize nuestros propios usuarios
-                props.setUsersSearchModeActivesSync(false);
-                props.searchUsersByusername('');
+                dispatch(setUsersSearchModeActivesSync(false));
+                dispatch(searchUsersApiByusername(''));
             } else {
                 // cambiamos el modo a search para que renderize los usuarios buscados
-                props.setUsersSearchModeActivesSync(true);
-                props.searchUsersByusername(inputSearch);
+                dispatch(setUsersSearchModeActivesSync(true));
+                dispatch(searchUsersApiByusername(inputSearch));
             }
         })();
     }, [debounceInputSearch]);
@@ -35,15 +49,15 @@ function ViewListaChat(props: GlobalDispatch & GlobalState) {
         setShowSpinnerLoading(0);
     }, [inputSearch])
     useEffect(() => {
-        if (!props.searchUsers.loading) {
+        if (!searchUsersState.loading) {
             setTimeout(() => setShowSpinnerLoading(-1), 500);
         }
-    }, [props.searchUsers.loading])
+    }, [searchUsersState.loading])
 
-    const setChatActive = (chatId: string | undefined) => props.findChatApi(chatId as string);
+    const setChatActive = (chatId: string | undefined) => dispatch(findChatApi(chatId as string));
 
     const setChatFinded = (index: number) => {
-        props.setIndexUserSearchedSelected(index);
+        dispatch(setIndexUserSearchedSelected(index));
     }
 
     function handlerInputSearch(e: React.ChangeEvent<HTMLInputElement>) {
@@ -61,7 +75,7 @@ function ViewListaChat(props: GlobalDispatch & GlobalState) {
             <div className="bg-primary d-flex justify-content-between px-4 py-3 border-shadow-title " >
                 <div className=''>
                     <h3 className='c-white'>Chat App</h3>
-                    <span className='c-white '>{props.user.result.username}</span>
+                    <span className='c-white '>{userState.result.username}</span>
                 </div>
                 <img src={fotoPerfil} alt="foto de perfil" width='70px' className='rounded-circle mx-2' />
             </div>
@@ -81,17 +95,17 @@ function ViewListaChat(props: GlobalDispatch & GlobalState) {
                 {/* CHATS CONTAINER */}
                 <div className='border p-3' style={{ height: '80vh', overflow: 'auto' }}>
                     {/* BUSCANDO USUARIOS */}
-                    {props.searchUsers.result.usersSearchModeActive ? (
+                    {searchUsersState.result.usersSearchModeActive ? (
                         <div>
                             <label className='border p-3 pr-5 w-100' style={{ backgroundColor: '#3498DB', color: 'white', borderRadius: 5 }}>
                                 Buscando usuarios...
                             </label>
-                            {props.searchUsers.result.UsersSearchData !== null &&
+                            {searchUsersState.result.UsersSearchData !== null &&
                                 (
                                     // if exists the user writed then it print in screen
-                                    (props.searchUsers.result.UsersSearchData.length !== 0)
+                                    (searchUsersState.result.UsersSearchData.length !== 0)
                                         ? (
-                                            props.searchUsers.result.UsersSearchData.map((user, index) => (
+                                            searchUsersState.result.UsersSearchData.map((user, index) => (
                                                 <div key={user._id} onClick={() => setChatFinded(index)} >
                                                     <ChatCard name={user.username} urlImageProfile={user.imageProfile} text={'Estoy disponible en Chat App'} />
                                                 </div>
@@ -104,12 +118,12 @@ function ViewListaChat(props: GlobalDispatch & GlobalState) {
                     ) : (<>
                         {/* CARGANDO CHATS PROPIOS */}
                         <label>Mis Chats</label>
-                        {props.chats.result.map(chat => {
+                        {chatsState.result.map(chat => {
                             const member = chat.members[1];
                             const lastMessage = chat.messages[chat.messages.length - 1];
 
                             const f = chat;
-                            const username = f.members[0].username === props.user.result.username ? f.members[1].username : f.members[0].username;
+                            const username = f.members[0].username === userState.result.username ? f.members[1].username : f.members[0].username;
                             return (
                                 member ?
                                     (<div key={member._id} onClick={() => setChatActive(chat._id)}>
@@ -125,6 +139,4 @@ function ViewListaChat(props: GlobalDispatch & GlobalState) {
     )
 }
 
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(ViewListaChat)
+export default ViewListaChat;

@@ -9,9 +9,7 @@ function useFetch<T>(url: string, dataStart: T, params?: any,
      const [data, setData] = useState<T>(dataStart);
      const retorno: [boolean, T, typeof reload] = [isFetching, data, reload];
 
-
      useEffect(() => {
-          // console.log(body , url)
           clienteAxios.get(url, { params })
                .then(res => {
                     setData(res.data)

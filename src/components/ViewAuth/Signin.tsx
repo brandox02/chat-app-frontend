@@ -1,17 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useDebounce } from 'use-debounce/lib';
 import { registerNewUserAndGetToken } from '../../crudMongoDB/auth';
 import { getUserByToken } from '../../crudMongoDB/user';
-import { mapDispatchToProps, mapStateToProps } from '../../redux/maps/indexMap';
-import { GlobalDispatch, GlobalState } from '../../redux/types';
+import { findChatsApi } from '../../redux/actions/chatsAction';
+import { findUserApi } from '../../redux/actions/userActions/findUserApi';
 import { setTokenLocalStorage } from '../../utils/localStorage';
 import { context, VIEWS } from '../Background/BackgroundReducer';
-import { validateUserSign,validatePassSign } from './Validation';
+import { validateUserSign, validatePassSign } from './Validation';
 
 const initialState = { messageError: '', bootstrapStyleInput: '' }
 
-const SignIn = (props: GlobalState & GlobalDispatch) => {
+const SignIn = () => {
+
+     const dispatch = useDispatch();
 
      const { setView } = useContext(context);
      const [passInput, setPassInput] = useState('');
@@ -48,11 +50,9 @@ const SignIn = (props: GlobalState & GlobalDispatch) => {
                setTokenLocalStorage(token);
                // cargamos data a redux y la aplicacion
                const user = await getUserByToken(token);
-               props.findUserApi(user._id);
-               props.findChatsApi();
+               dispatch(findUserApi(user._id));
+               dispatch(findChatsApi());
                setView(VIEWS.VIEW_LISTA_CHAT.value);
-               console.log('klk');
-               
           }
      }
 
@@ -97,4 +97,4 @@ const SignIn = (props: GlobalState & GlobalDispatch) => {
      )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
+export default SignIn;

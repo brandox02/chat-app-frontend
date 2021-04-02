@@ -1,4 +1,4 @@
-import { GlobalState } from '../../types'
+import { State } from '../../types'
 import { ChatAction } from '../../types/chat'
 import { BodyParam } from '../../types'
 import axios from '../../../customAxios'
@@ -23,7 +23,7 @@ const updateChatApiError = (error: Error): ChatAction => ({
      payload: error
 });
 
-export const updateChatApi = (chatId: string, body: BodyParam) => async (dispatch: any, getState: () => GlobalState) => {
+export const updateChatApi = (chatId: string, body: BodyParam) => async (dispatch: any, getState: () => State) => {
      dispatch(updateChatApiStarted());
 
      axios.put('/chat/' + chatId, body)

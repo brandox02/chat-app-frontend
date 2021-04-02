@@ -1,18 +1,24 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { verifyUserCorrect } from '../../crudMongoDB/auth';
 import { getUserByToken, userExistsFetch } from '../../crudMongoDB/user';
-import { mapDispatchToProps, mapStateToProps } from '../../redux/maps/indexMap';
-import { GlobalState, GlobalDispatch } from '../../redux/types';
 import { setTokenLocalStorage } from '../../utils/localStorage';
 import { useDebounce } from 'use-debounce'
 import { context, VIEWS } from '../Background/BackgroundReducer';
 import { validateUserSign } from './Validation';
 import { IUser } from '../../redux/types/users';
+import { State } from '../../redux/types';
+import { findChatsApi } from '../../redux/actions/chatsAction';
+import { findUserApi } from '../../redux/actions/userActions/findUserApi';
 
 const initialState = { messageError: '', bootstrapStyleInput: '' }
 
-const Login = (props: GlobalState & GlobalDispatch) => {
+const Login = () => {
+
+     const dispatch = useDispatch();
+     const userState = useSelector((state: State) => state.user);
+     const chatsState = useSelector((state: State) => state.chats);
+     
      const [passToApp, setPassToApp] = useState(false);
      const [userValidationLog, setUserValidationLog] = useState(initialState);
 
@@ -37,21 +43,21 @@ const Login = (props: GlobalState & GlobalDispatch) => {
 
      useEffect(() => {
           // validation to do not entry first time
-          if (!props.user.loading && passInput !== '') {
+          if (!userState.loading && passInput !== '') {
                // console.log('yo no te puedo hablar');
-               props.findChatsApi();
+               dispatch(findChatsApi());
           }
-     }, [props.user.loading]);
+     }, [userState.loading]);
 
      useEffect(() => {
           // validation to do not entry first time
-          if (!props.chats.loading && passInput !== '') {
+          if (!chatsState.loading && passInput !== '') {
                setPassToApp(true);
                setPassInput('');
                setUserInput('');
                setView(VIEWS.VIEW_LISTA_CHAT.value);
           }
-     }, [props.chats.loading]);
+     }, [chatsState.loading]);
 
 
      const submit = async () => {
@@ -59,14 +65,14 @@ const Login = (props: GlobalState & GlobalDispatch) => {
           if (userValidationLog.messageError === '' && userInput !== '' && passInput !== '') {
                const { token } = await verifyUserCorrect(userInput, passInput);
                if (token) {
-                    console.log(token);
+                    // console.log(token);
                     // getting token of local storage
                     setTokenLocalStorage(token);
                     // cargamos data a redux y aplicacion
                     const user: IUser = await getUserByToken(token);
-                    console.log(user);
+                    // console.log(user);
                     if (user) {
-                         props.findUserApi(user._id as string);
+                         dispatch(findUserApi(user._id as string));
                     }
                } else {
                     alert('Contrasena incorrecta');
@@ -117,4 +123,4 @@ const Login = (props: GlobalState & GlobalDispatch) => {
           </div>
      )
 }
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;

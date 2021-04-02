@@ -2,18 +2,21 @@ import React, { useEffect, useReducer, useState } from 'react'
 import ViewListaChat from '../ViewListaChat/ViewListaChat'
 import ViewChat from '../ViewChat/ViewChat'
 import { setTokenLocalStorage } from '../../utils/localStorage';
-import { mapStateToProps, mapDispatchToProps } from '../../redux/maps/indexMap'
-import { connect } from 'react-redux';
-import { GlobalDispatch, GlobalState } from '../../redux/types';
-import ViewAuth from '../ViewAuth/ViewAuth';
+import { useDispatch, useSelector } from 'react-redux';
 import { getUserByToken } from '../../crudMongoDB/user';
-import { context, contextExample, reducer, VIEWS } from './BackgroundReducer';
+import { context, reducer, VIEWS } from './BackgroundReducer';
 import { verifyValidToken } from '../../crudMongoDB/auth';
 import Login from '../ViewAuth/Login';
 import Signin from '../ViewAuth/Signin';
+import { State } from '../../redux/types';
+import { findUserApi } from '../../redux/actions/userActions/findUserApi';
+import { findChatsApi } from '../../redux/actions/chatsAction';
+import { findChatApi } from '../../redux/actions/chatActions/findChatApi';
 
-
-const Background = ({ findUserApi, findChatsApi, findChatApi, chats, user }: GlobalState & GlobalDispatch) => {
+const Background = () => {
+    const dispatch = useDispatch();
+    const chatsState = useSelector((state: State) => state.chats);
+    const userState = useSelector((state: State) => state.user);
 
     const [view, _setView] = useReducer(reducer, VIEWS);
     const [x, reload] = useReducer(x => x + 1, 0);
@@ -34,8 +37,7 @@ const Background = ({ findUserApi, findChatsApi, findChatApi, chats, user }: Glo
                     const user = await getUserByToken(token);
                     // console.log(user);
                     if (user) {
-
-                        findUserApi(user._id);
+                        dispatch(findUserApi(user._id));
                     }
                 }
             }
@@ -45,17 +47,17 @@ const Background = ({ findUserApi, findChatsApi, findChatApi, chats, user }: Glo
     useEffect(() => {
         // este efecto es para que cargue los chats despues que cargue el usuario, que el la busqueda de chats depende
         // del usuario
-        if (!user.loading && user.result.username !== "") findChatsApi();
-    }, [user.loading]);
+        if (!userState.loading && userState.result.username !== "") dispatch(findChatsApi());
+    }, [userState.loading]);
 
     useEffect(() => {
         // estos es para que cargue por default el primer chat 
-        if (!chats.loading && chats.result.length > 0 && primerFindChat) {
+        if (!chatsState.loading && chatsState.result.length > 0 && primerFindChat) {
             setPrimerFindChat(false);
-            const firstChat = chats.result[0]._id as string;
-            findChatApi(firstChat);
+            const firstChat = chatsState.result[0]._id as string;
+            dispatch(findChatApi(firstChat));
         }
-    }, [chats.loading]);
+    }, [chatsState.loading]);
 
     function setView(view: string) {
         _setView(view);
@@ -75,7 +77,6 @@ const Background = ({ findUserApi, findChatsApi, findChatApi, chats, user }: Glo
                             <ViewChat />
                         </div>
                     </>}
-
                     <>
                         <div className={`col-12 ${view.VIEW_LOGIN.display} `}>
                             <Login />
@@ -84,11 +85,10 @@ const Background = ({ findUserApi, findChatsApi, findChatApi, chats, user }: Glo
                             <Signin />
                         </div>
                     </>
-
                 </div>
             </div>
         </context.Provider>
     )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Background);
+export default Background;

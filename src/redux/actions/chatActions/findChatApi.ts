@@ -1,7 +1,6 @@
-import { GlobalState } from '../../types';
+import { State } from '../../types';
 import { ChatAction, IChat, ChatDispatch } from '../../types/chat';
 import axios from '../../../customAxios';
-import { setTokenLocalStorage } from '../../../utils/localStorage';
 
 export const FIND_CHAT_API_SUCESSS = 'FIND_CHAT_API_SUCESSS';
 export const FIND_CHAT_API_STARTED = 'FIND_CHAT_API_STARTED';
@@ -21,7 +20,7 @@ const findChatApiError = (error: Error): ChatAction => ({
      payload: error
 });
 
-export const findChatApi = (chatId: string) => async (dispatch: ChatDispatch, getState: () => GlobalState) => {
+export const findChatApi = (chatId: string) => async (dispatch: ChatDispatch, getState: () => State) => {
      dispatch(findChatApiStarted());
      // gettin all chats in the found user
      axios.get('/chat/' + chatId)

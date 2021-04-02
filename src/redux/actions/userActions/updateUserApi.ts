@@ -1,5 +1,5 @@
 import axiosClient from '../../../customAxios';
-import { BodyParam, GlobalState, } from '../../types';
+import { BodyParam, State, } from '../../types';
 import { IUser, UserAction, UserDispatch } from '../../types/users'
 
 export const UPDATE_USER_API_SUCCESS = 'UPDATE_USER_API_SUCCESS';
@@ -20,7 +20,7 @@ const updateUserError = (error: Error): UserAction => ({
      payload: error
 })
 
-export const updateUserApi = (bodyParam: BodyParam) => (dispath: UserDispatch, getState: () => GlobalState) => {
+export const updateUserApi = (bodyParam: BodyParam) => (dispath: UserDispatch, getState: () => State) => {
      // INIT DE ACTION 
      dispath(updateUserStarted());
      const id = getState().user.result._id;

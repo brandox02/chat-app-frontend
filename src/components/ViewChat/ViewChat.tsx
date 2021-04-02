@@ -6,16 +6,29 @@ import deleteChatImage from '../../images/delete-chat.png';
 import { context, VIEWS } from '../Background/BackgroundReducer';
 import { IMessage } from '../../types/Chat';
 import { formatAMPM } from '../../utils';
-import { connect } from 'react-redux';
-import { mapStateToProps, mapDispatchToProps } from '../../redux/maps/indexMap';
-import { GlobalDispatch, GlobalState } from '../../redux/types/index';
-import { createNewChat, deleteChatApi, insertNewMessage } from '../../crudMongoDB/chat';
+import { createNewChat, deleteChatApi } from '../../crudMongoDB/chat';
 import Message from './Message';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { Dropdown, Toast } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { State } from '../../redux/types/index';
+import { UserState } from '../../redux/types/users';
+import { ChatsState } from '../../redux/types/chats';
+import { UsersSearchState } from '../../redux/types/usersSearch';
+import { findChatApi } from '../../redux/actions/chatActions/findChatApi';
+import { updateChatApi } from '../../redux/actions/chatActions/updateChatApi';
+import { findChatsApi } from '../../redux/actions/chatsAction';
+import { ChatState } from '../../redux/types/chat';
 
-const ViewChat = (props: GlobalDispatch & GlobalState) => {
+const ViewChat = () => {
+
+    const dispatch = useDispatch();
+    const userState: UserState = useSelector((state: State) => state.user);
+    const chatsState: ChatsState = useSelector((state: State) => state.chats);
+    const chatState: ChatState = useSelector((state: State) => state.chat);
+    const searchUsersState: UsersSearchState = useSelector((state: State) => state.searchUsers);
+
     const { setView } = useContext(context);
     // OWN STATES
     const [textInput, setTextInput] = useState('');
@@ -27,9 +40,9 @@ const ViewChat = (props: GlobalDispatch & GlobalState) => {
     useEffect(() => {
         let _matchUserFindedBetweenUserChats = false;
         let chatIdOfChatOfUserSelected = '';
-        const userFindendSelected = props.searchUsers.result.UsersSearchData[props.searchUsers.result.indexUserSearchedSelected];
+        const userFindendSelected = searchUsersState.result.UsersSearchData[searchUsersState.result.indexUserSearchedSelected];
         // search if the user selected in the search contain chat with me;
-        props.chats.result.forEach(chat => {
+        chatsState.result.forEach(chat => {
             if (userFindendSelected && chat.members[1].username === userFindendSelected.username) {
                 _matchUserFindedBetweenUserChats = true;
                 chatIdOfChatOfUserSelected = chat._id as string;
@@ -38,10 +51,10 @@ const ViewChat = (props: GlobalDispatch & GlobalState) => {
         });
         // if match then
         if (_matchUserFindedBetweenUserChats) {
-            props.findChatApi(chatIdOfChatOfUserSelected);
+            dispatch(findChatApi(chatIdOfChatOfUserSelected));
             setMatchUserFindedBetweenUserChats(true);
         } else setMatchUserFindedBetweenUserChats(false);
-    }, [props.searchUsers.result.indexUserSearchedSelected]);
+    }, [searchUsersState.result.indexUserSearchedSelected]);
 
     const handlerSetView = () => {
         setView(VIEWS.VIEW_LISTA_CHAT.value);
@@ -49,10 +62,10 @@ const ViewChat = (props: GlobalDispatch & GlobalState) => {
 
     const handlerSendMessage = async () => {
         // in this if the usersearched clicked do not exists
-        if (props.searchUsers.result.usersSearchModeActive && !matchUserFindedBetweenUserChats) {
+        if (searchUsersState.result.usersSearchModeActive && !matchUserFindedBetweenUserChats) {
 
-            const userId = props.user.result._id
-            const userIdSearchClick = props.searchUsers.result.UsersSearchData[props.searchUsers.result.indexUserSearchedSelected]
+            const userId = userState.result._id
+            const userIdSearchClick = searchUsersState.result.UsersSearchData[searchUsersState.result.indexUserSearchedSelected]
             //console.log(userId, userId && userIdSearchClick._id);
             if (userIdSearchClick) {
                 const newChat = await createNewChat(userId as string, userIdSearchClick._id as string);
@@ -61,13 +74,13 @@ const ViewChat = (props: GlobalDispatch & GlobalState) => {
                     const chatId = newChat._id as string
 
                     const message: IMessage = {
-                        author: props.user.result,
+                        author: userState.result,
                         date: new Date(),
                         text: textInput,
                     }
                     const bodyParam = { field: 'messages', value: message }
                     // insertNewMessage();
-                    props.updateChatApi(chatId, bodyParam);
+                    dispatch(updateChatApi(chatId, bodyParam));
                     setMatchUserFindedBetweenUserChats(true);
                     setTextInput('');
 
@@ -75,14 +88,14 @@ const ViewChat = (props: GlobalDispatch & GlobalState) => {
             }
         } else {
             const message: IMessage = {
-                author: props.user.result,
+                author: userState.result,
                 date: new Date(),
                 text: textInput,
             }
-            const chatId = props.chat.result._id as string
+            const chatId = chatState.result._id as string
             const bodyParam = { field: 'messages', value: message }
             // insertNewMessage();
-            props.updateChatApi(chatId, bodyParam);
+            dispatch(updateChatApi(chatId, bodyParam));
             setTextInput('');
         }
     }
@@ -90,42 +103,44 @@ const ViewChat = (props: GlobalDispatch & GlobalState) => {
         setTextInput(e.currentTarget.value)
     }
     const getUsername = () => {
-        if (props.searchUsers.result.usersSearchModeActive) {
-            const userSearchedSelected = props.searchUsers.result.UsersSearchData[props.searchUsers.result.indexUserSearchedSelected];
+        if (searchUsersState.result.usersSearchModeActive) {
+            const userSearchedSelected = searchUsersState.result.UsersSearchData[searchUsersState.result.indexUserSearchedSelected];
             return userSearchedSelected && userSearchedSelected.username;
         } else {
-            if (props.chat.result && props.chat.result.author !== '') {
+            if (chatState.result && chatState.result.author !== '') {
                 // getting correct username. the API return two members
-                const f = props.chat.result;
-                return f.members[0].username === props.user.result.username ? f.members[1].username : f.members[0].username;
+                const f = chatState.result;
+                return f.members[0].username === userState.result.username ? f.members[1].username : f.members[0].username;
             } else return null
 
         }
     }
 
     const getActive = () => {
-        if (props.searchUsers.result.usersSearchModeActive) {
-            const userSearchedSelected = props.searchUsers.result.UsersSearchData[props.searchUsers.result.indexUserSearchedSelected];
+        if (searchUsersState.result.usersSearchModeActive) {
+            const userSearchedSelected = searchUsersState.result.UsersSearchData[searchUsersState.result.indexUserSearchedSelected];
             return userSearchedSelected && userSearchedSelected.active ? 'Activo' : 'Inactivo';
         } else {
-            if (props.chat.result && props.chat.result.members.length > 0) {
-                return props.chat.result && props.chat.result.members[1].active ? 'Activo' : 'Inactivo'
+            if (chatState.result && chatState.result.members.length > 0) {
+                return chatState.result && chatState.result.members[1].active ? 'Activo' : 'Inactivo'
             }
         }
     }
     const getMessagesBody = () => {
         // validation if it isn't in users search mode and if matchUserFindedBetweenUserChats is true to find chat user else then not print the chat
-        if (props.searchUsers.result.usersSearchModeActive && !matchUserFindedBetweenUserChats) {
-            const nombre = props.searchUsers.result.UsersSearchData[props.searchUsers.result.indexUserSearchedSelected];
+        if (searchUsersState.result.usersSearchModeActive && !matchUserFindedBetweenUserChats) {
+            const nombre = searchUsersState.result.UsersSearchData[searchUsersState.result.indexUserSearchedSelected];
             return <div className='text-center pt-2'>Escribele a {nombre && nombre.username}</div>
 
         }
-        return props.chat.result && props.chat.result.messages.map(message => {
+        return chatState.result && chatState.result.messages.map(message => {
             const timeMessage = formatAMPM(new Date(message.date));
-            const isOwn = message.author._id === props.user.result._id;
+            const isOwn = message.author._id === userState.result._id;
             return (
                 <div key={message._id}>
-                    <Message iAm={isOwn} username={message.author.username as string} date={timeMessage}>
+                    <Message iAm={isOwn} username={message.author.username as string} date={timeMessage}
+                        messageId={message._id as string}
+                    >
                         {message.text}
                     </Message>
                 </div>
@@ -133,11 +148,11 @@ const ViewChat = (props: GlobalDispatch & GlobalState) => {
         });
     }
     const deleteChat = async () => {
-        const idChat = props.chat.result._id as string;
+        const idChat = chatState.result._id as string;
         const res = await deleteChatApi(idChat);
         if (res) {
-            props.findChatApi(props.chats.result[0]._id as string);
-            props.findChatsApi();
+            dispatch(findChatApi(chatsState.result[0]._id as string));
+            dispatch(findChatsApi());
             setView(VIEWS.VIEW_LISTA_CHAT.value);
 
         } else alert('ha ocurrido un error al intentar borrar el chat')
@@ -147,7 +162,7 @@ const ViewChat = (props: GlobalDispatch & GlobalState) => {
     return (
         <div className='vh-100 view-chat-container' style={{ backgroundColor: 'white', position: 'relative' }}>
             {(() => {
-                if ((props.chat.result && props.chat.result.author !== '') || props.searchUsers.result.indexUserSearchedSelected !== -1) {
+                if ((chatState.result && chatState.result.author !== '') || searchUsersState.result.indexUserSearchedSelected !== -1) {
                     return <>
                         {/* MODALS AND TOASTS*/}
                         <Modal show={showModel} centered={true}>
@@ -168,9 +183,6 @@ const ViewChat = (props: GlobalDispatch & GlobalState) => {
                                 </Toast.Header>
                             </Toast>
                         </div>
-                        
-
-
                         {/* HEAD */}
                         <div className='bg-primary d-flex  py-3 border-shadow-title justify-content-between'>
                             <div className=' d-flex flex-nowrap'>
@@ -221,4 +233,4 @@ const ViewChat = (props: GlobalDispatch & GlobalState) => {
 
 
 }
-export default connect(mapStateToProps, mapDispatchToProps)(ViewChat);
+export default ViewChat;

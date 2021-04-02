@@ -1,36 +1,5 @@
-import { AxiosError, AxiosResponse } from 'axios'
 import axiosClient from '../customAxios'
-import IChat, { chatExampleObject } from '../types/Chat'
-
-const url = '/chat';
-
-// export function getChats(idUser?: any, callback?: (res: AxiosResponse<IChat[]>) => void): Promise<IChat[]> {
-//      const params = {
-//           params: {
-//                member1: idUser
-//           }
-//      }
-
-//      return axiosClient.get(url, params)
-//           .then(res => {
-//                callback && callback(res)
-//                return res.data
-//           })
-//           .catch(error => {
-//                console.log((error as AxiosError).message);
-//                return null;
-//           })
-// }
-
-// export function getChat(chatId?: string, callback?: (res: AxiosResponse<IChat>) => void): Promise<IChat> {
-
-//      return axiosClient.get(`${url}/${chatId}`)
-//           .then(res => {
-//                callback && callback(res)
-//                return res.data
-//           })
-//           .catch(error => console.log(error))
-// }
+import { chatExampleObject, IMessage } from '../types/Chat'
 
 export async function insertNewMessage(chatId: string, message: string, authorId: string) {
      const body = {
@@ -76,3 +45,14 @@ export async function deleteChatApi(chatId: string) {
           return null;
      }
 }
+
+// export async function deleteMessageAPI(chatId: string, messageId: string, messages: IMessage[]) {
+//      const newMessages = messages.filter(message => message._id !== messageId);
+//      const bodyParam = {
+//           field: 'messages',
+//           value: newMessages
+//      }
+
+//      const res = await axiosClient.put('/chat/' + chatId, bodyParam);
+//      console.log(res.data);
+// }

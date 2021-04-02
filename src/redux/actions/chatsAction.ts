@@ -1,4 +1,4 @@
-import { GlobalState } from '../types';
+import { State } from '../types';
 import { ChatsAction, IChats, ChatsDispatch } from '../types/chats';
 import axios from '../../customAxios';
 
@@ -20,7 +20,7 @@ const findChatsApiError = (error: Error): ChatsAction => ({
      payload: error
 });
 
-export const findChatsApi = () => (dispatch: ChatsDispatch, getState: () => GlobalState) => {
+export const findChatsApi = () => (dispatch: ChatsDispatch, getState: () => State) => {
      dispatch(findChatsApiStarted());
      const userId = getState().user.result._id ;
      const params = { params: {

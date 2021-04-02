@@ -1,5 +1,5 @@
 import axiosClient from '../../../customAxios';
-import { GlobalState, } from '../../types';
+import { State, } from '../../types';
 import { IUser, UserAction, UserDispatch } from '../../types/users'
 
 export const FIND_USER_API_SUCCESS = 'FIND_USER_API_SUCCESS';
@@ -20,13 +20,12 @@ const findUserError = (error: Error): UserAction => ({
      payload: error
 })
 
-export const findUserApi = (id: string) => (dispath: UserDispatch, getState: () => GlobalState) => {
+export const findUserApi = (id: string) => (dispath: UserDispatch, getState: () => State) => {
      // INIT DE ACTION 
      dispath(findUserStarted());
      axiosClient.get('/user/' + id)
           .then(res => {
                // ACTION COMPLETE
-               console.log()
                dispath(findUserSuccess(res.data))
           })
           .catch(error => {
