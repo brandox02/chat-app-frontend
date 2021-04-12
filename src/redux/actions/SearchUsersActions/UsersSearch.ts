@@ -3,6 +3,7 @@ import axios from '../../../customAxios';
 import { State } from "../../types";
 import IUser from "../../../types/User";
 import { setIndexUserSearchedSelected } from "./setIndexUserSearchedSelected";
+import { getUsersByUsernameApi } from "../../../crudMongoDB/user";
 
 export const SEARCH_USER_API_SUCESSS = 'SEARCH_USER_API_SUCESSS';
 export const SEARCH_USER_API_STARTED = 'SEARCH_USER_API_STARTED';
@@ -27,11 +28,10 @@ export const searchUsersApiByusername = (username: string) => (dispatch: UsersSe
      dispatch(searchUserApiStarted());
      // when search it the users the index user put it in -1
      dispatch(setIndexUserSearchedSelected(-1));
-     axios.get('/user/', { params: { username } })
-          .then(res => {
-               dispatch(searchUserApiSuccess(res.data));
-          })
-          .catch(error => {
-               dispatch(searchUserApiError(error));
-          })
+
+     getUsersByUsernameApi(
+          username,
+          res => dispatch(searchUserApiSuccess(res)),
+          error => dispatch(searchUserApiError(error))
+     );
 }

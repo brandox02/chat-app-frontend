@@ -1,3 +1,4 @@
+import { getUserByIdApi } from '../../../crudMongoDB/user';
 import axiosClient from '../../../customAxios';
 import { State, } from '../../types';
 import { IUser, UserAction, UserDispatch } from '../../types/users'
@@ -20,16 +21,14 @@ const findUserError = (error: Error): UserAction => ({
      payload: error
 })
 
-export const findUserApi = (id: string) => (dispath: UserDispatch, getState: () => State) => {
+export const findUserApi = (userId: string) => (dispath: UserDispatch, getState: () => State) => {
+     
      // INIT DE ACTION 
      dispath(findUserStarted());
-     axiosClient.get('/user/' + id)
-          .then(res => {
-               // ACTION COMPLETE
-               dispath(findUserSuccess(res.data))
-          })
-          .catch(error => {
-               // ACTION ERROR
-               dispath(findUserError(error.message))
-          });
+
+     getUserByIdApi(
+          userId,
+          usuario => dispath(findUserSuccess(usuario)),
+          error => dispath(findUserError(error))
+     )
 }

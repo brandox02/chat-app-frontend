@@ -17,7 +17,7 @@ import { UserState } from '../../redux/types/users';
 import { ChatsState } from '../../redux/types/chats';
 import { UsersSearchState } from '../../redux/types/usersSearch';
 import { findChatApi } from '../../redux/actions/chatActions/findChatApi';
-import { updateChatApi } from '../../redux/actions/chatActions/updateChatApi';
+import { chatUpdateConstants, updateChatApi } from '../../redux/actions/chatActions/updateChatApi';
 import { findChatsApi } from '../../redux/actions/chatsAction';
 import { ChatState } from '../../redux/types/chat';
 
@@ -60,31 +60,36 @@ const ViewChat = () => {
         setView(VIEWS.VIEW_LISTA_CHAT.value);
     }
 
-    const handlerSendMessage = async () => {
-        // in this if the usersearched clicked do not exists
+    const handlerSendMessage = () => {
+        // if the usersearched clicked do not exists
         if (searchUsersState.result.usersSearchModeActive && !matchUserFindedBetweenUserChats) {
+            const userId = userState.result._id;
+            const userIdSearchClick = searchUsersState.result.UsersSearchData[searchUsersState.result.indexUserSearchedSelected];
 
-            const userId = userState.result._id
-            const userIdSearchClick = searchUsersState.result.UsersSearchData[searchUsersState.result.indexUserSearchedSelected]
-            //console.log(userId, userId && userIdSearchClick._id);
             if (userIdSearchClick) {
-                const newChat = await createNewChat(userId as string, userIdSearchClick._id as string);
-                if (newChat) {
-                    console.log(newChat);
-                    const chatId = newChat._id as string
+                createNewChat(userId as string, userIdSearchClick._id as string,
+                    (newChat) => {
 
-                    const message: IMessage = {
-                        author: userState.result,
-                        date: new Date(),
-                        text: textInput,
-                    }
-                    const bodyParam = { field: 'messages', value: message }
-                    // insertNewMessage();
-                    dispatch(updateChatApi(chatId, bodyParam));
-                    setMatchUserFindedBetweenUserChats(true);
-                    setTextInput('');
+                        const chatId = newChat._id as string
 
-                } else alert('Hubo un error al crear el chat')
+                        const message: IMessage = {
+                            author: userState.result,
+                            date: new Date(),
+                            text: textInput,
+                        }
+
+                        dispatch(updateChatApi(chatId, {
+                            type: chatUpdateConstants.NEW_MESSAGE, value: message
+                        }));
+                        setMatchUserFindedBetweenUserChats(true);
+                        setTextInput('');
+
+                    },
+                    (error) => {
+                        alert('Hubo un error al crear el chat: ' + error.message);
+                    });
+            } else {
+                console.log("can't send mensaje");
             }
         } else {
             const message: IMessage = {
@@ -95,7 +100,9 @@ const ViewChat = () => {
             const chatId = chatState.result._id as string
             const bodyParam = { field: 'messages', value: message }
             // insertNewMessage();
-            dispatch(updateChatApi(chatId, bodyParam));
+            dispatch(updateChatApi(chatId, {
+                type: chatUpdateConstants.NEW_MESSAGE, value: message
+            }));
             setTextInput('');
         }
     }
@@ -147,16 +154,17 @@ const ViewChat = () => {
             )
         });
     }
-    const deleteChat = async () => {
+    const deleteChat = () => {
         const idChat = chatState.result._id as string;
-        const res = await deleteChatApi(idChat);
-        if (res) {
-            dispatch(findChatApi(chatsState.result[0]._id as string));
-            dispatch(findChatsApi());
-            setView(VIEWS.VIEW_LISTA_CHAT.value);
-
-        } else alert('ha ocurrido un error al intentar borrar el chat')
-
+        deleteChatApi(idChat,
+            () => {
+                dispatch(findChatApi(chatsState.result[0]._id as string));
+                dispatch(findChatsApi());
+                setView(VIEWS.VIEW_LISTA_CHAT.value);
+            },
+            () => {
+                alert('ha ocurrido un error al intentar borrar el chat');
+            });
     }
 
     return (

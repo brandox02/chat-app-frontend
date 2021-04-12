@@ -1,5 +1,5 @@
 import IUser from '../../types/User';
-import { BodyParam } from './index'
+import { userUpdateConstants } from '../actions/userActions/updateUserApi';
 
 
 export interface UserState {
@@ -17,4 +17,9 @@ export interface UserAction {
 
 export type UserDispatch = (arg0: UserAction) => void
 
-
+export interface IUserUpdate {
+     type: typeof userUpdateConstants.ADD_CONTACT | typeof userUpdateConstants.DELETE_CONTACT |
+     typeof userUpdateConstants.SET_ACTIVE | typeof userUpdateConstants.SET_IMAGE_PROFILE |
+     typeof userUpdateConstants.SET_PASSWORD,
+     value: IUser | string | boolean
+}

@@ -47,12 +47,13 @@ function ViewListaChat() {
     // this two effects is for show/hidde spinner when it search to user
     useEffect(() => {
         setShowSpinnerLoading(0);
-    }, [inputSearch])
+    }, [inputSearch]);
+
     useEffect(() => {
         if (!searchUsersState.loading) {
             setTimeout(() => setShowSpinnerLoading(-1), 500);
         }
-    }, [searchUsersState.loading])
+    }, [searchUsersState.loading]);
 
     const setChatActive = (chatId: string | undefined) => dispatch(findChatApi(chatId as string));
 
@@ -110,7 +111,7 @@ function ViewListaChat() {
                                                     <ChatCard name={user.username} urlImageProfile={user.imageProfile} text={'Estoy disponible en Chat App'} />
                                                 </div>
                                             ))
-                                            // don not exists the user writed 
+                                            // do not exists the user writed 
                                         ) : <div className='mt-3'>No se encontro este usuario...</div>
                                 )
                             }

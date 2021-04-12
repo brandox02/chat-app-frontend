@@ -1,10 +1,19 @@
+import { setUserActiveApi } from '../../../crudMongoDB/user';
 import axiosClient from '../../../customAxios';
 import { BodyParam, State, } from '../../types';
-import { IUser, UserAction, UserDispatch } from '../../types/users'
+import { IUser, IUserUpdate, UserAction, UserDispatch } from '../../types/users'
 
 export const UPDATE_USER_API_SUCCESS = 'UPDATE_USER_API_SUCCESS';
 export const UPDATE_USER_API_ERROR = 'UPDATE_USER_API_ERROR';
 export const UPDATE_USER_API_STARTED = 'UPDATE_USER_API_STARTED';
+
+export const userUpdateConstants = {
+     SET_PASSWORD: 'SET_PASSWORD',
+     SET_ACTIVE: 'SET_ACTIVE',
+     SET_IMAGE_PROFILE: 'SET_IMAGE_PROFILE',
+     ADD_CONTACT: 'ADD_CONTACT',
+     DELETE_CONTACT: 'DELETE_CONTACT'
+}
 
 const updateUserStarted = (): UserAction => ({
      type: UPDATE_USER_API_STARTED
@@ -20,17 +29,24 @@ const updateUserError = (error: Error): UserAction => ({
      payload: error
 })
 
-export const updateUserApi = (bodyParam: BodyParam) => (dispath: UserDispatch, getState: () => State) => {
+export const updateUserApi = (param: IUserUpdate) => (dispath: UserDispatch, getState: () => State) => {
      // INIT DE ACTION 
      dispath(updateUserStarted());
-     const id = getState().user.result._id;
-     axiosClient.put('/user/' + id, bodyParam)
-          .then(res => {
-               // ACTION COMPLETE
-               dispath(updateUserSuccess(res.data));
-          })
-          .catch(error => {
-               // ACTION ERROR
-               dispath(updateUserError(error.message));
-          });
+     const userId = getState().user.result._id as string;
+
+     switch (param.type) {
+          case userUpdateConstants.SET_ACTIVE:
+               const active: boolean = param.value as boolean;
+               setUserActiveApi(
+                    userId,
+                    active,
+                    userUpdated => dispath(updateUserSuccess(userUpdated)),
+                    error => dispath(updateUserError(error))
+               );
+               break;
+
+          default:
+               break;
+     }
+
 }

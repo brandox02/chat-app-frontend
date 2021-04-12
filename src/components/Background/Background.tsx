@@ -12,6 +12,7 @@ import { State } from '../../redux/types';
 import { findUserApi } from '../../redux/actions/userActions/findUserApi';
 import { findChatsApi } from '../../redux/actions/chatsAction';
 import { findChatApi } from '../../redux/actions/chatActions/findChatApi';
+import { deleteChatApi } from '../../crudMongoDB/chat';
 
 const Background = () => {
     const dispatch = useDispatch();

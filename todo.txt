@@ -9,3 +9,5 @@
 * Add LogOut function
 
 * Add when delete user then delete it the chat view
+
+// check the delete-message service, when you delete a message do not show the new chat with the update messages 

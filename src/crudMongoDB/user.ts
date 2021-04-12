@@ -2,15 +2,18 @@ import { AxiosResponse, AxiosError } from 'axios'
 import axiosClient from '../customAxios'
 import IUser from '../types/User'
 
-const url = '/user'
 
-export function getUser(userId: string, callback?: (res: AxiosResponse<IUser>) => void) {
-     return axiosClient.get(`${url}/${userId}`)
-          .then(res => {
-               (callback) && callback(res.data)
-               return res.data
+export function getUserByIdApi(
+     userId: string,
+     callbackSuccess?: (user: IUser) => void,
+     callbackError?: (error: AxiosError) => void
+) {
+     axiosClient.get(`user/${userId}`)
+          .then((res: AxiosResponse<IUser>) => (callbackSuccess) && callbackSuccess(res.data))
+          .catch(error => {
+               callbackError && callbackError(error);
+               console.log(error.response?.data);
           })
-          .catch(error => console.log(error.response?.data))
 }
 
 export const userExistsFetch = async (username: string) => {
@@ -36,13 +39,34 @@ export const getUserByToken = async (token: string) => {
      }
 }
 
-export const getUserByName = async (username: string) => {
-     try {
+export function getUsersByUsernameApi(
+     username: string,
+     callbackSuccess?: (user: IUser[]) => void,
+     callbackError?: (error: AxiosError) => void
+): void {
 
-          const users = await axiosClient.get('/user', { params: { username } });
-          return users.data
-     } catch (error) {
-          console.log(`Getting user by name. Error ${error.response?.data}`);
-          return null;
+     axiosClient.get('/user', { params: { username } })
+          .then((res: AxiosResponse<IUser[]>) => callbackSuccess && callbackSuccess(res.data))
+          .catch((error: AxiosError) => {
+               console.log(`Getting user by name. Error ${error.response?.data}`);
+               callbackError && callbackError(error);
+          })
+}
+
+export function setUserActiveApi(
+     userId: string,
+     active: boolean,
+     callbackSuccess?: (userUpdated: IUser) => void,
+     callbackError?: (error: AxiosError) => void
+): void {
+     const bodyParam = {
+          field: 'active',
+          value: active
      }
+     axiosClient.put('/user/' + userId, bodyParam)
+          .then((res: AxiosResponse<IUser>) => callbackSuccess && callbackSuccess(res.data))
+          .catch((error: AxiosError) => {
+               console.log(`Getting user by name. Error ${error.response?.data}`);
+               callbackError && callbackError(error);
+          })
 }

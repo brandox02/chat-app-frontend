@@ -20,8 +20,8 @@ const Message = ({ children, date, username, iAm, messageId }: IProps) => {
     const [floatValue, bgColorvalue] = iAm ? ['right', '#F5EEF8'] : ['left', '#EBDEF0'];
 
     const deleteMessage = () => {
-        const { result: { _id, messages } } = chatState;
-        deleteMessageAPI((_id as string), messageId, messages);
+        const { result: { _id } } = chatState;
+        deleteMessageAPI((_id as string), messageId);
     }
 
     return (

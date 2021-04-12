@@ -1,6 +1,7 @@
 import { State } from '../types';
 import { ChatsAction, IChats, ChatsDispatch } from '../types/chats';
 import axios from '../../customAxios';
+import { getChatsApi } from '../../crudMongoDB/chat';
 
 export const FIND_CHATS_API_SUCESSS = 'FIND_CHATS_API_SUCESSS'
 export const FIND_CHATS_API_STARTED = 'FIND_CHATS_API_STARTED'
@@ -22,19 +23,14 @@ const findChatsApiError = (error: Error): ChatsAction => ({
 
 export const findChatsApi = () => (dispatch: ChatsDispatch, getState: () => State) => {
      dispatch(findChatsApiStarted());
-     const userId = getState().user.result._id ;
-     const params = { params: {
-          member1: userId
-     }}
-     // gettin all chats in the found user
-     axios.get('/chat/', params)
-          .then(res => {
-               dispatch(findChatsApiSuccess(res.data))
-          })
-          .catch(error => {
-               dispatch(findChatsApiError(error))
-          })
+     const userId = getState().user.result._id as string;
 
+     // getting all chats in the found user
+     getChatsApi(
+          userId,
+          chats => dispatch(findChatsApiSuccess(chats)),
+          error => dispatch(findChatsApiError(error))
+     )
 }
 
 
