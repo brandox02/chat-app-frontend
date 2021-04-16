@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import fotoPerfil from '../../images/foto-perfil.png';
 import fotoBack from '../../images/previous.png';
 import fotoSend from '../../images/send.png';
@@ -6,7 +6,7 @@ import deleteChatImage from '../../images/delete-chat.png';
 import { context, VIEWS } from '../Background/BackgroundReducer';
 import { IMessage } from '../../types/Chat';
 import { formatAMPM } from '../../utils';
-import { createNewChat, deleteChatApi } from '../../crudMongoDB/chat';
+import { createNewChat, deleteChatApi } from '../../services/chatServices';
 import Message from './Message';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
@@ -16,10 +16,11 @@ import { State } from '../../redux/types/index';
 import { UserState } from '../../redux/types/users';
 import { ChatsState } from '../../redux/types/chats';
 import { UsersSearchState } from '../../redux/types/usersSearch';
-import { findChatApi } from '../../redux/actions/chatActions/findChatApi';
-import { chatUpdateConstants, updateChatApi } from '../../redux/actions/chatActions/updateChatApi';
-import { findChatsApi } from '../../redux/actions/chatsAction';
-import { ChatState } from '../../redux/types/chat';
+import { findChatAction } from '../../redux/actions/chatActions/findChatAction';
+import { chatUpdateConstants, updateChatAction } from '../../redux/actions/chatActions/updateChatAction';
+import { deleteChatAction } from '../../redux/actions/chatActions/deleteChatAction';
+import { ChatState, IChat } from '../../redux/types/chat';
+
 
 const ViewChat = () => {
 
@@ -27,6 +28,7 @@ const ViewChat = () => {
     const userState: UserState = useSelector((state: State) => state.user);
     const chatsState: ChatsState = useSelector((state: State) => state.chats);
     const chatState: ChatState = useSelector((state: State) => state.chat);
+    const chatResult: IChat = chatState.result as IChat;
     const searchUsersState: UsersSearchState = useSelector((state: State) => state.searchUsers);
 
     const { setView } = useContext(context);
@@ -35,8 +37,9 @@ const ViewChat = () => {
     const [matchUserFindedBetweenUserChats, setMatchUserFindedBetweenUserChats] = useState(false);
     const [showModel, setShowModal] = useState(false);
     const [showToastDeleteChat, setShowToastDeleteChat] = useState(false);
-    // this useEffect is used every time that change the searchUserSelected to find if the search user selected match with an exists chat with me
+    const canRenderChat = searchUsersState.result.indexUserSearchedSelected !== -1 || chatResult ? true : false;
 
+    // this useEffect is used every time that change the searchUserSelected to find if the search user selected match with an exists chat with me
     useEffect(() => {
         let _matchUserFindedBetweenUserChats = false;
         let chatIdOfChatOfUserSelected = '';
@@ -51,7 +54,7 @@ const ViewChat = () => {
         });
         // if match then
         if (_matchUserFindedBetweenUserChats) {
-            dispatch(findChatApi(chatIdOfChatOfUserSelected));
+            dispatch(findChatAction(chatIdOfChatOfUserSelected));
             setMatchUserFindedBetweenUserChats(true);
         } else setMatchUserFindedBetweenUserChats(false);
     }, [searchUsersState.result.indexUserSearchedSelected]);
@@ -78,7 +81,7 @@ const ViewChat = () => {
                             text: textInput,
                         }
 
-                        dispatch(updateChatApi(chatId, {
+                        dispatch(updateChatAction(chatId, {
                             type: chatUpdateConstants.NEW_MESSAGE, value: message
                         }));
                         setMatchUserFindedBetweenUserChats(true);
@@ -97,10 +100,9 @@ const ViewChat = () => {
                 date: new Date(),
                 text: textInput,
             }
-            const chatId = chatState.result._id as string
-            const bodyParam = { field: 'messages', value: message }
+            const chatId = chatResult._id as string
             // insertNewMessage();
-            dispatch(updateChatApi(chatId, {
+            dispatch(updateChatAction(chatId, {
                 type: chatUpdateConstants.NEW_MESSAGE, value: message
             }));
             setTextInput('');
@@ -155,22 +157,27 @@ const ViewChat = () => {
         });
     }
     const deleteChat = () => {
-        const idChat = chatState.result._id as string;
-        deleteChatApi(idChat,
-            () => {
-                dispatch(findChatApi(chatsState.result[0]._id as string));
-                dispatch(findChatsApi());
-                setView(VIEWS.VIEW_LISTA_CHAT.value);
-            },
-            () => {
-                alert('ha ocurrido un error al intentar borrar el chat');
-            });
+        const chatId = chatResult._id as string;
+        dispatch(deleteChatAction(chatId));
     }
+    const divMessagesContainer = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        moveScrollToBottom();
+    }, [chatResult && chatResult.messages])
+
+    const moveScrollToBottom = () => {
+        const f = divMessagesContainer.current
+        if (f) {
+            f.scrollTop = f.scrollHeight;
+        }
+    }
+
 
     return (
         <div className='vh-100 view-chat-container' style={{ backgroundColor: 'white', position: 'relative' }}>
             {(() => {
-                if ((chatState.result && chatState.result.author !== '') || searchUsersState.result.indexUserSearchedSelected !== -1) {
+                if (canRenderChat) {
                     return <>
                         {/* MODALS AND TOASTS*/}
                         <Modal show={showModel} centered={true}>
@@ -217,7 +224,7 @@ const ViewChat = () => {
                             </div>
                         </div>
                         {/* BODY MESSAGE */}
-                        <div className='border my-2 ' style={{ overflow: 'auto', height: 'calc(100% - 145px)', backgroundColor: '' }}>
+                        <div ref={divMessagesContainer} className='border my-2' style={{ overflow: 'auto', height: 'calc(100% - 145px)', transition: 'all 0.5s' }}>
                             {getMessagesBody()}
                         </div>
                         {/* BODY WRITE MESSAGE */}

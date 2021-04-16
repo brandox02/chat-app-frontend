@@ -1,9 +1,8 @@
 import { UsersSearchAction, UsersSearchDispatch } from "../../types/usersSearch";
-import axios from '../../../customAxios';
 import { State } from "../../types";
 import IUser from "../../../types/User";
-import { setIndexUserSearchedSelected } from "./setIndexUserSearchedSelected";
-import { getUsersByUsernameApi } from "../../../crudMongoDB/user";
+import { setIndexUserSearchedSelectedAction } from "./setIndexUserSearchedSelectedAction";
+import { getUsersByUsernameApi } from "../../../services/userServices";
 
 export const SEARCH_USER_API_SUCESSS = 'SEARCH_USER_API_SUCESSS';
 export const SEARCH_USER_API_STARTED = 'SEARCH_USER_API_STARTED';
@@ -24,10 +23,10 @@ const searchUserApiError = (error: Error): UsersSearchAction => ({
      payload: { error }
 });
 
-export const searchUsersApiByusername = (username: string) => (dispatch: UsersSearchDispatch, getState: () => State) => {
+export const searchUsersByusernameAction = (username: string) => (dispatch: UsersSearchDispatch, getState: () => State) => {
      dispatch(searchUserApiStarted());
      // when search it the users the index user put it in -1
-     dispatch(setIndexUserSearchedSelected(-1));
+     dispatch(setIndexUserSearchedSelectedAction(-1));
 
      getUsersByUsernameApi(
           username,

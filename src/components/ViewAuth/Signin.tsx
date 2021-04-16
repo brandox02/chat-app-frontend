@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useDebounce } from 'use-debounce/lib';
-import { registerNewUserAndGetToken } from '../../crudMongoDB/auth';
-import { getUserByToken } from '../../crudMongoDB/user';
-import { findChatsApi } from '../../redux/actions/chatsAction';
-import { findUserApi } from '../../redux/actions/userActions/findUserApi';
+import { registerNewUserAndGetToken } from '../../services/authServices';
+import { getUserByToken } from '../../services/userServices';
+import { findChatsAction } from '../../redux/actions/chatsAction';
+import { findUserApiAction } from '../../redux/actions/userActions/findUserAction';
 import { setTokenLocalStorage } from '../../utils/localStorage';
 import { context, VIEWS } from '../Background/BackgroundReducer';
 import { validateUserSign, validatePassSign } from './Validation';
@@ -50,8 +50,8 @@ const SignIn = () => {
                setTokenLocalStorage(token);
                // cargamos data a redux y la aplicacion
                const user = await getUserByToken(token);
-               dispatch(findUserApi(user._id));
-               dispatch(findChatsApi());
+               dispatch(findUserApiAction(user._id));
+               dispatch(findChatsAction());
                setView(VIEWS.VIEW_LISTA_CHAT.value);
           }
      }

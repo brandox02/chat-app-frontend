@@ -77,7 +77,7 @@ export function reducer(state: typeof VIEWS, action: paramView) {
 export const contextExample = {
      setView: (arg0: paramView) => { },
      activeChatId: '',
-     setActiveChatId: (arg0: string) => { }
+     setActiveChatId: (arg0: string) => { },
 }
 
 export const context = React.createContext(contextExample);

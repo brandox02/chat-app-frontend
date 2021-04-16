@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Dropdown } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
-import { deleteMessageAPI } from '../../crudMongoDB/chat';
+import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../../redux/types';
-
+import { updateChatAction, chatUpdateConstants } from '../../redux/actions/chatActions/updateChatAction';
+import { IChat } from '../../redux/types/chat';
+import { ChatAction } from '../../redux/types/chat';
 interface IProps {
     children: string,
     username: string,
@@ -14,14 +15,20 @@ interface IProps {
 
 const Message = ({ children, date, username, iAm, messageId }: IProps) => {
 
-    const chatState = useSelector((state: State) => state.chat);
-
-    // const [showModal, setShowModal] = useState(false);
+    const dispatch = useDispatch();
+    const chatResult: IChat = useSelector((state: State) => state.chat.result) as IChat;
     const [floatValue, bgColorvalue] = iAm ? ['right', '#F5EEF8'] : ['left', '#EBDEF0'];
 
     const deleteMessage = () => {
-        const { result: { _id } } = chatState;
-        deleteMessageAPI((_id as string), messageId);
+        const {_id} = chatResult;
+        const chatId: string = _id as string;
+
+        dispatch(
+            updateChatAction(chatId, {
+            type: chatUpdateConstants.DELETE_MESSAGE,
+                value: messageId
+            })
+        );
     }
 
     return (

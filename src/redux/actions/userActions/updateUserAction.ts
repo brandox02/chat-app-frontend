@@ -1,4 +1,4 @@
-import { setUserActiveApi } from '../../../crudMongoDB/user';
+import { setUserActiveApi } from '../../../services/userServices';
 import axiosClient from '../../../customAxios';
 import { BodyParam, State, } from '../../types';
 import { IUser, IUserUpdate, UserAction, UserDispatch } from '../../types/users'
@@ -29,7 +29,7 @@ const updateUserError = (error: Error): UserAction => ({
      payload: error
 })
 
-export const updateUserApi = (param: IUserUpdate) => (dispath: UserDispatch, getState: () => State) => {
+export const updateUserAction = (param: IUserUpdate) => (dispath: UserDispatch, getState: () => State) => {
      // INIT DE ACTION 
      dispath(updateUserStarted());
      const userId = getState().user.result._id as string;

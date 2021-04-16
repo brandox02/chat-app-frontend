@@ -1,6 +1,6 @@
 import { State } from '../../types';
 import { ChatAction, IChat, ChatDispatch } from '../../types/chat';
-import { getChatApi } from '../../../crudMongoDB/chat';
+import { getChatApi } from '../../../services/chatServices';
 
 export const FIND_CHAT_API_SUCESSS = 'FIND_CHAT_API_SUCESSS';
 export const FIND_CHAT_API_STARTED = 'FIND_CHAT_API_STARTED';
@@ -20,7 +20,7 @@ const findChatApiError = (error: Error): ChatAction => ({
      payload: error
 });
 
-export const findChatApi = (chatId: string) => async (dispatch: ChatDispatch, getState: () => State) => {
+export const findChatAction = (chatId: string) => (dispatch: ChatDispatch, getState: () => State) => {
      
      dispatch(findChatApiStarted());
 

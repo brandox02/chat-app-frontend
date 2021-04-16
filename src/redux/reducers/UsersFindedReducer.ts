@@ -1,8 +1,8 @@
 import { UsersSearchState, UsersSearchDispatch, UsersSearchAction } from '../types/usersSearch';
-import { SEARCH_USER_API_ERROR, SEARCH_USER_API_STARTED, SEARCH_USER_API_SUCESSS } from '../actions/SearchUsersActions/UsersSearch';
-import { SET_USERS_SEARCH_MODE_ACTIVE_SYNC } from '../actions/SearchUsersActions/setUsersSearchActiveMode';
+import { SEARCH_USER_API_ERROR, SEARCH_USER_API_STARTED, SEARCH_USER_API_SUCESSS } from '../actions/SearchUsersActions/searchUsersAction';
+import { SET_USERS_SEARCH_MODE_ACTIVE_SYNC } from '../actions/SearchUsersActions/setUsersSearchActiveModeAction';
 import { IUser } from '../types/users';
-import { SET_INDEX_USER_SEARCHED_SELECTED } from '../actions/SearchUsersActions/setIndexUserSearchedSelected';
+import { SET_INDEX_USER_SEARCHED_SELECTED } from '../actions/SearchUsersActions/setIndexUserSearchedSelectedAction';
 
 const initialState: UsersSearchState = {
      error: null,

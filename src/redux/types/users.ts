@@ -1,5 +1,5 @@
 import IUser from '../../types/User';
-import { userUpdateConstants } from '../actions/userActions/updateUserApi';
+import { userUpdateConstants } from '../actions/userActions/updateUserAction';
 
 
 export interface UserState {

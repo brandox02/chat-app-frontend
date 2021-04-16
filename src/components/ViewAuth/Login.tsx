@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { verifyUserCorrect } from '../../crudMongoDB/auth';
-import { getUserByToken, userExistsFetch } from '../../crudMongoDB/user';
+import { verifyUserCorrect } from '../../services/authServices';
+import { getUserByToken, userExistsFetch } from '../../services/userServices';
 import { setTokenLocalStorage } from '../../utils/localStorage';
 import { useDebounce } from 'use-debounce'
 import { context, VIEWS } from '../Background/BackgroundReducer';
 import { validateUserSign } from './Validation';
 import { IUser } from '../../redux/types/users';
 import { State } from '../../redux/types';
-import { findChatsApi } from '../../redux/actions/chatsAction';
-import { findUserApi } from '../../redux/actions/userActions/findUserApi';
+import { findChatsAction } from '../../redux/actions/chatsAction';
+import { findUserApiAction } from '../../redux/actions/userActions/findUserAction';
 
 const initialState = { messageError: '', bootstrapStyleInput: '' }
 
@@ -45,7 +45,7 @@ const Login = () => {
           // validation to do not entry first time
           if (!userState.loading && passInput !== '') {
                // console.log('yo no te puedo hablar');
-               dispatch(findChatsApi());
+               dispatch(findChatsAction());
           }
      }, [userState.loading]);
 
@@ -72,7 +72,7 @@ const Login = () => {
                     const user: IUser = await getUserByToken(token);
                     // console.log(user);
                     if (user) {
-                         dispatch(findUserApi(user._id as string));
+                         dispatch(findUserApiAction(user._id as string));
                     }
                } else {
                     alert('Contrasena incorrecta');

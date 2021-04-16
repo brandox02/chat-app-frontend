@@ -1,6 +1,4 @@
-* Add that when search user it deleted the view ViewChat
-
-* Add spinner when the user deleted a chat
+* Add when search user it deleted the view ViewChat
 
 * Add socket.io to get real-time for example when the user send message to other user
 
@@ -8,6 +6,6 @@
 
 * Add LogOut function
 
-* Add when delete user then delete it the chat view
+* update when we throw a delete/update/insert action do not fetch to API else if replace the data by redux wit a payload 
 
-// check the delete-message service, when you delete a message do not show the new chat with the update messages 
+* i was thinking a god way to implement de sockets

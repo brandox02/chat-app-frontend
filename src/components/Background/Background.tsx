@@ -3,20 +3,22 @@ import ViewListaChat from '../ViewListaChat/ViewListaChat'
 import ViewChat from '../ViewChat/ViewChat'
 import { setTokenLocalStorage } from '../../utils/localStorage';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserByToken } from '../../crudMongoDB/user';
+import { getUserByToken } from '../../services/userServices';
 import { context, reducer, VIEWS } from './BackgroundReducer';
-import { verifyValidToken } from '../../crudMongoDB/auth';
+import { verifyValidToken } from '../../services/authServices';
 import Login from '../ViewAuth/Login';
 import Signin from '../ViewAuth/Signin';
 import { State } from '../../redux/types';
-import { findUserApi } from '../../redux/actions/userActions/findUserApi';
-import { findChatsApi } from '../../redux/actions/chatsAction';
-import { findChatApi } from '../../redux/actions/chatActions/findChatApi';
-import { deleteChatApi } from '../../crudMongoDB/chat';
+import { findUserApiAction } from '../../redux/actions/userActions/findUserAction';
+import { findChatsAction } from '../../redux/actions/chatsAction';
+import { findChatAction } from '../../redux/actions/chatActions/findChatAction';
+import { socketId } from '../../socket/listeners/index'
+import { emiteNewConnection } from '../../socket/emitters';
 
 const Background = () => {
     const dispatch = useDispatch();
     const chatsState = useSelector((state: State) => state.chats);
+    const chatState = useSelector((state: State) => state.chat);
     const userState = useSelector((state: State) => state.user);
 
     const [view, _setView] = useReducer(reducer, VIEWS);
@@ -38,7 +40,7 @@ const Background = () => {
                     const user = await getUserByToken(token);
                     // console.log(user);
                     if (user) {
-                        dispatch(findUserApi(user._id));
+                        dispatch(findUserApiAction(user._id));
                     }
                 }
             }
@@ -48,7 +50,11 @@ const Background = () => {
     useEffect(() => {
         // este efecto es para que cargue los chats despues que cargue el usuario, que el la busqueda de chats depende
         // del usuario
-        if (!userState.loading && userState.result.username !== "") dispatch(findChatsApi());
+        if (!userState.loading && userState.result.username !== "") {
+            let userId: string = userState.result._id as string;
+            emiteNewConnection(userId);
+            dispatch(findChatsAction())
+        };
     }, [userState.loading]);
 
     useEffect(() => {
@@ -56,7 +62,7 @@ const Background = () => {
         if (!chatsState.loading && chatsState.result.length > 0 && primerFindChat) {
             setPrimerFindChat(false);
             const firstChat = chatsState.result[0]._id as string;
-            dispatch(findChatApi(firstChat));
+            dispatch(findChatAction(firstChat));
         }
     }, [chatsState.loading]);
 
@@ -64,6 +70,7 @@ const Background = () => {
         _setView(view);
         reload();
     }
+
 
     return (
         <context.Provider value={{ setView, activeChatId, setActiveChatId }}>

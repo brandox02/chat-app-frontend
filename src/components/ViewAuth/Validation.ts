@@ -1,4 +1,4 @@
-import { userExistsFetch } from "../../crudMongoDB/user";
+import { userExistsFetch } from "../../services/userServices";
 
 export const validateUserSign = async (username: string) => {
      let res = { messageError: '', bootstrapStyleInput: 'is-valid' };

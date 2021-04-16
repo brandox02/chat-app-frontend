@@ -2,23 +2,22 @@ import React, { useEffect, useState } from 'react';
 import fotoPerfil from '../../images/foto-perfil.png';
 import ChatCard from './ChatCard';
 import { useDebounce } from 'use-debounce';
-import { setUsersSearchModeActivesSync } from '../../redux/actions/SearchUsersActions/setUsersSearchActiveMode';
+import { setUsersSearchModeActivesSyncAction } from '../../redux/actions/SearchUsersActions/setUsersSearchActiveModeAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../../redux/types/index';
 import { UserState } from '../../redux/types/users';
 import { ChatsState } from '../../redux/types/chats';
 import { UsersSearchState } from '../../redux/types/usersSearch';
-import { findChatApi } from '../../redux/actions/chatActions/findChatApi';
-import { ChatState } from '../../redux/types/chat';
-import { setIndexUserSearchedSelected } from '../../redux/actions/SearchUsersActions/setIndexUserSearchedSelected';
-import { searchUsersApiByusername } from '../../redux/actions/SearchUsersActions/UsersSearch';
+import { findChatAction } from '../../redux/actions/chatActions/findChatAction';
+import { setIndexUserSearchedSelectedAction } from '../../redux/actions/SearchUsersActions/setIndexUserSearchedSelectedAction';
+import { searchUsersByusernameAction } from '../../redux/actions/SearchUsersActions/searchUsersAction';
 
 function ViewListaChat() {
 
     const dispatch = useDispatch();
     const userState: UserState = useSelector((state: State) => state.user);
     const chatsState: ChatsState = useSelector((state: State) => state.chats);
-    const chatState: ChatState = useSelector((state: State) => state.chat);
+    // const chatState: ChatState = useSelector((state: State) => state.chat);
     const searchUsersState: UsersSearchState = useSelector((state: State) => state.searchUsers);
 
     // texto del input search
@@ -26,7 +25,6 @@ function ViewListaChat() {
     // debounce para que se haga la solicitud al api cuando el usuario termine de escribir
     const [debounceInputSearch] = useDebounce(inputSearch, 800);
     const [showSpinnerLoading, setShowSpinnerLoading] = useState(0);
-    // [props.searchUsers.result.UsersSearchData] es la data de los usuarios buscados en API
 
     // efecto para cuando el usuario termine de escribir en el input search se haga fetch a la API
     useEffect(() => {
@@ -34,12 +32,12 @@ function ViewListaChat() {
             // validacion para que no haga el fetch cuando cargue el componente principalmente y tambien para que no haga fetch si el usuario no tiene nada
             if (inputSearch === '') {
                 // cambiamos el modo a no search para que renderize nuestros propios usuarios
-                dispatch(setUsersSearchModeActivesSync(false));
-                dispatch(searchUsersApiByusername(''));
+                dispatch(setUsersSearchModeActivesSyncAction(false));
+                dispatch(searchUsersByusernameAction(''));
             } else {
                 // cambiamos el modo a search para que renderize los usuarios buscados
-                dispatch(setUsersSearchModeActivesSync(true));
-                dispatch(searchUsersApiByusername(inputSearch));
+                dispatch(setUsersSearchModeActivesSyncAction(true));
+                dispatch(searchUsersByusernameAction(inputSearch));
             }
         })();
     }, [debounceInputSearch]);
@@ -55,10 +53,10 @@ function ViewListaChat() {
         }
     }, [searchUsersState.loading]);
 
-    const setChatActive = (chatId: string | undefined) => dispatch(findChatApi(chatId as string));
+    const setChatActive = (chatId: string | undefined) => dispatch(findChatAction(chatId as string));
 
     const setChatFinded = (index: number) => {
-        dispatch(setIndexUserSearchedSelected(index));
+        dispatch(setIndexUserSearchedSelectedAction(index));
     }
 
     function handlerInputSearch(e: React.ChangeEvent<HTMLInputElement>) {

@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware, CombinedState } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import userReducer from './reducers/userReducer';
 import chatsReducer from './reducers/chatsReducer';
 import chatReducer from './reducers/chatReducer';
@@ -16,4 +16,4 @@ const reducers: CombineReducer = combineReducers({
 })
 
 
-export default createStore(reducers, composeWithDevTools(applyMiddleware(thunk)))
+export default createStore(reducers, composeWithDevTools(applyMiddleware(thunk)));

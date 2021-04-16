@@ -1,7 +1,6 @@
 import { State } from '../types';
 import { ChatsAction, IChats, ChatsDispatch } from '../types/chats';
-import axios from '../../customAxios';
-import { getChatsApi } from '../../crudMongoDB/chat';
+import { getChatsApi } from '../../services/chatServices';
 
 export const FIND_CHATS_API_SUCESSS = 'FIND_CHATS_API_SUCESSS'
 export const FIND_CHATS_API_STARTED = 'FIND_CHATS_API_STARTED'
@@ -21,7 +20,7 @@ const findChatsApiError = (error: Error): ChatsAction => ({
      payload: error
 });
 
-export const findChatsApi = () => (dispatch: ChatsDispatch, getState: () => State) => {
+export const findChatsAction = () => (dispatch: ChatsDispatch, getState: () => State) => {
      dispatch(findChatsApiStarted());
      const userId = getState().user.result._id as string;
 

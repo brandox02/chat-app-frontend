@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useMemo } from 'react'
-import clienteAxios, { AxiosError } from '../customAxios'
+import React, { useEffect, useState } from 'react';
+import clienteAxios, { AxiosError } from '../customAxios';
 
 
+// this hook is unutilize
 function useFetch<T>(url: string, dataStart: T, params?: any,
      callbackCorrect?: (data: T) => void, callbackError?: (error: AxiosError) => void) {
 
@@ -30,4 +31,4 @@ function useFetch<T>(url: string, dataStart: T, params?: any,
      return retorno;
 }
 
-export default useFetch
+export default useFetch;

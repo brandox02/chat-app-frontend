@@ -1,6 +1,6 @@
 import { UserState, UserAction, IUser } from '../types/users';
-import { FIND_USER_API_ERROR, FIND_USER_API_SUCCESS, FIND_USER_API_STARTED } from '../actions/userActions/findUserApi';
-import { UPDATE_USER_API_ERROR, UPDATE_USER_API_STARTED, UPDATE_USER_API_SUCCESS } from './../actions/userActions/updateUserApi';
+import { FIND_USER_API_ERROR, FIND_USER_API_SUCCESS, FIND_USER_API_STARTED } from '../actions/userActions/findUserAction';
+import { UPDATE_USER_API_ERROR, UPDATE_USER_API_STARTED, UPDATE_USER_API_SUCCESS } from '../actions/userActions/updateUserAction';
 
 const initialState: UserState = {
      error: null,

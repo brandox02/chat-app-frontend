@@ -1,6 +1,6 @@
 import IChat, { IMessage } from '../../types/Chat';
 import { IUser } from './users';
-import { chatUpdateConstants } from '../actions/chatActions/updateChatApi';
+import { chatUpdateConstants } from '../actions/chatActions/updateChatAction';
 export type { IChat };
 chatUpdateConstants.DELETE_MESSAGE
 export type ChatDispatch = (arg0: ChatAction) => void
@@ -8,7 +8,7 @@ export type ChatDispatch = (arg0: ChatAction) => void
 export interface ChatState {
      loading: boolean,
      error: null | Error,
-     result: IChat
+     result: IChat | null
 }
 
 export interface ChatAction {
