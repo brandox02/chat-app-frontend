@@ -1,20 +1,21 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { LegacyRef, useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useDebounce } from 'use-debounce/lib';
-import { registerNewUserAndGetToken } from '../../services/authServices';
-import { getUserByToken } from '../../services/userServices';
-import { findChatsAction } from '../../redux/actions/chatsAction';
-import { findUserApiAction } from '../../redux/actions/userActions/findUserAction';
-import { setTokenLocalStorage } from '../../utils/localStorage';
-import { context, VIEWS } from '../Background/BackgroundReducer';
-import { validateUserSign, validatePassSign } from './Validation';
-
+import { registerNewUserAndGetToken } from '../../../services/authServices';
+import { getUserByToken } from '../../../services/userServices';
+import { findChatsAction } from '../../../redux/actions/chatsActions/findChatAction';
+import { findUserApiAction } from '../../../redux/actions/userActions/findUserAction';
+import { setTokenLocalStorage } from '../../../utils/localStorage';
+import { context, VIEWS } from '../../Background/BackgroundReducer';
+import { validateUserSign, validatePassSign } from '../Validation';
+import Webcam from 'react-webcam';
+import '../style.css'
 const initialState = { messageError: '', bootstrapStyleInput: '' }
 
 const SignIn = () => {
 
      const dispatch = useDispatch();
-
+     const webcamRef: LegacyRef<Webcam> = useRef(null);
      const { setView } = useContext(context);
      const [passInput, setPassInput] = useState('');
      const [userInput, setUserInput] = useState('');
@@ -46,7 +47,9 @@ const SignIn = () => {
 
      const submit = async () => {
           if (userValidationSign.messageError === '' && userValidationSign.messageError === '' && userInput !== '' && passInput !== '') {
-               const token = await registerNewUserAndGetToken(userInput, passInput);
+               if (!webcamRef.current) throw new Error();
+               const imageSrc = webcamRef.current.getScreenshot() as string;
+               const token = await registerNewUserAndGetToken(userInput, passInput, imageSrc);
                setTokenLocalStorage(token);
                // cargamos data a redux y la aplicacion
                const user = await getUserByToken(token);
@@ -58,8 +61,16 @@ const SignIn = () => {
 
      return (
           <div className='d-flex justify-content-center align-items-center w-100 vh-100' style={{ backgroundColor: '#F6F6F6' }}>
-               <div className="card border p-5" style={{ width: 500 }}>
+               <div className="card p-4" style={{ width: 420 }}>
                     <h2 className='mb-4'>Crear Cuenta</h2>
+                    <Webcam
+                         ref={webcamRef}
+                         audio={false}
+                         screenshotFormat="image/jpeg"
+                         className='w-100'
+
+                    />
+                    <span className='text-center'>Mira a la camara, trata de que solo se vea tu cara y de que halla luz cuando des a iniciar sesion</span>
                     {/* username */}
                     <div className='p-1'>
                          <label className='mr-3'>Usuario</label>
@@ -87,7 +98,7 @@ const SignIn = () => {
                     {/* INICIAR SESION - REGISTRARSE */}
                     <div className='mb-3 d-flex justify-content-center' >
                          <span
-                              className='nav-link active hover-a' onClick={setToLogin}
+                              className='nav-link active hover' onClick={setToLogin}
                               style={{ position: 'absolute', bottom: 0 }}>
                               Iniciar Sesion
                          </span>

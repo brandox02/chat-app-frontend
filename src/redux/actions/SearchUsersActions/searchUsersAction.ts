@@ -3,23 +3,21 @@ import { State } from "../../types";
 import IUser from "../../../types/User";
 import { setIndexUserSearchedSelectedAction } from "./setIndexUserSearchedSelectedAction";
 import { getUsersByUsernameApi } from "../../../services/userServices";
+import { searchUsersEnumThunk } from '../../enums/searchUsersEnum'
 
-export const SEARCH_USER_API_SUCESSS = 'SEARCH_USER_API_SUCESSS';
-export const SEARCH_USER_API_STARTED = 'SEARCH_USER_API_STARTED';
-export const SEARCH_USER_API_ERROR = 'SEARCH_USER_API_ERROR';
 
 const searchUserApiStarted = (): UsersSearchAction => ({
-     type: SEARCH_USER_API_STARTED,
+     type: searchUsersEnumThunk.SEARCH_USER_API_STARTED,
      payload: {}
 });
 
 const searchUserApiSuccess = (dataUsers: IUser[]): UsersSearchAction => ({
-     type: SEARCH_USER_API_SUCESSS,
+     type: searchUsersEnumThunk.SEARCH_USER_API_SUCESSS,
      payload: { usersSearchData: dataUsers }
 });
 
 const searchUserApiError = (error: Error): UsersSearchAction => ({
-     type: SEARCH_USER_API_ERROR,
+     type: searchUsersEnumThunk.SEARCH_USER_API_ERROR,
      payload: { error }
 });
 

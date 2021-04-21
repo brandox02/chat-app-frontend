@@ -1,6 +1,5 @@
 import { UserState, UserAction, IUser } from '../types/users';
-import { FIND_USER_API_ERROR, FIND_USER_API_SUCCESS, FIND_USER_API_STARTED } from '../actions/userActions/findUserAction';
-import { UPDATE_USER_API_ERROR, UPDATE_USER_API_STARTED, UPDATE_USER_API_SUCCESS } from '../actions/userActions/updateUserAction';
+import { updateUserEnumThunk, findUserEnumThunk } from '../enums/userEnum'
 
 const initialState: UserState = {
      error: null,
@@ -14,24 +13,24 @@ const initialState: UserState = {
 }
 function reducer(state = initialState, action: UserAction): UserState {
      switch (action.type) {
-          case FIND_USER_API_STARTED:
+          case findUserEnumThunk.FIND_USER_API_STARTED:
                return { ...state, loading: true }
 
-          case FIND_USER_API_SUCCESS:
+          case findUserEnumThunk.FIND_USER_API_SUCCESS:
                return { ...state, loading: false, result: action.payload as IUser }
 
-          case FIND_USER_API_ERROR:
+          case findUserEnumThunk.FIND_USER_API_ERROR:
                return { ...state, loading: false, error: action.payload as Error }
 
-          case UPDATE_USER_API_STARTED:
+          case updateUserEnumThunk.UPDATE_USER_API_STARTED:
                return { ...state, loading: true }
 
-          case UPDATE_USER_API_SUCCESS:
+          case updateUserEnumThunk.UPDATE_USER_API_SUCCESS:
                return { ...state, loading: false, result: action.payload as IUser }
 
-          case UPDATE_USER_API_ERROR:
+          case updateUserEnumThunk.UPDATE_USER_API_ERROR:
                return { ...state, loading: false, error: action.payload as Error }
-               
+
           default:
                return state;
      }

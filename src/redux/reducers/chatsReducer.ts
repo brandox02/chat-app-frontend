@@ -1,5 +1,5 @@
-import { ChatsAction, ChatsState, IChats } from '../types/chats'
-import { FIND_CHATS_API_ERROR, FIND_CHATS_API_STARTED, FIND_CHATS_API_SUCESSS } from '../actions/chatsAction'
+import { ChatsAction, ChatsState, IChats } from '../types/chats';
+import { DELETE_CHATS, findChatsEnumThunk, UPDATE_CHATS } from '../enums/chatsEnums';
 
 const initialState: ChatsState = {
      error: null,
@@ -9,12 +9,28 @@ const initialState: ChatsState = {
 
 function reducer(state = initialState, action: ChatsAction): ChatsState {
      switch (action.type) {
-          case FIND_CHATS_API_STARTED:
+          case findChatsEnumThunk.FIND_CHATS_API_STARTED:
                return { ...state, loading: true }
-          case FIND_CHATS_API_SUCESSS:
+          case findChatsEnumThunk.FIND_CHATS_API_SUCESSS:
                return { ...state, loading: false, result: action.payload as IChats }
-          case FIND_CHATS_API_ERROR:
+          case findChatsEnumThunk.FIND_CHATS_API_ERROR:
                return { ...state, loading: false, error: action.payload as Error }
+
+          case UPDATE_CHATS:
+               return {
+                    ...state,
+                    result: state.result.map(chat => {
+                         if (chat._id == action.payload.chatId) {
+                              return action.payload.chat
+                         }
+                         return chat;
+                    })
+               }
+          case DELETE_CHATS:
+               return {
+                    ...state,
+                    result: state.result.filter(chat => chat._id !== action.payload)
+               }
 
           default:
                return state;

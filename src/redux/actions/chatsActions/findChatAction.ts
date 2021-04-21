@@ -1,22 +1,19 @@
-import { State } from '../types';
-import { ChatsAction, IChats, ChatsDispatch } from '../types/chats';
-import { getChatsApi } from '../../services/chatServices';
-
-export const FIND_CHATS_API_SUCESSS = 'FIND_CHATS_API_SUCESSS'
-export const FIND_CHATS_API_STARTED = 'FIND_CHATS_API_STARTED'
-export const FIND_CHATS_API_ERROR = 'FIND_CHATS_API_ERROR'
+import { State } from '../../types';
+import { ChatsAction, IChats, ChatsDispatch } from '../../types/chats';
+import { getChatsApi } from '../../../services/chatServices';
+import { findChatsEnumThunk } from '../../enums/chatsEnums';
 
 const findChatsApiStarted = (): ChatsAction => ({
-     type: FIND_CHATS_API_STARTED,
+     type: findChatsEnumThunk.FIND_CHATS_API_STARTED,
 });
 
 const findChatsApiSuccess = (res: IChats): ChatsAction => ({
-     type: FIND_CHATS_API_SUCESSS,
+     type: findChatsEnumThunk.FIND_CHATS_API_SUCESSS,
      payload: res
 });
 
 const findChatsApiError = (error: Error): ChatsAction => ({
-     type: FIND_CHATS_API_ERROR,
+     type: findChatsEnumThunk.FIND_CHATS_API_ERROR,
      payload: error
 });
 
@@ -30,8 +27,6 @@ export const findChatsAction = () => (dispatch: ChatsDispatch, getState: () => S
           chats => dispatch(findChatsApiSuccess(chats)),
           error => dispatch(findChatsApiError(error))
      )
-}
-
-
+};
 
 

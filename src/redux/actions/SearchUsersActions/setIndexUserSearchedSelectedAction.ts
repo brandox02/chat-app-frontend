@@ -1,9 +1,8 @@
 import { UsersSearchAction } from "../../types/usersSearch";
-
-export const SET_INDEX_USER_SEARCHED_SELECTED = 'SET_INDEX_USER_SEARCHED_SELECTED';
+import { searchUsersEnum } from '../../enums/searchUsersEnum';
 
 export const setIndexUserSearchedSelectedAction = (index: number): UsersSearchAction => ({
-     type: SET_INDEX_USER_SEARCHED_SELECTED,
+     type: searchUsersEnum.SET_INDEX_USER_SEARCHED_SELECTED,
      payload: { indexUserSearchedSelected: index }
 });
 

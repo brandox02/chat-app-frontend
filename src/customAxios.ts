@@ -4,7 +4,7 @@ import { AxiosError } from 'axios'
 export type { AxiosError }
 
 const axiosClient = axios.create({
-    baseURL: 'http://192.168.100.36:5000',
+    baseURL: process.env.REACT_APP_HOST_PC,
 })
 
 export default axiosClient;

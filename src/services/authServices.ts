@@ -1,16 +1,17 @@
 import axios from '../customAxios'
 
-export const registerNewUserAndGetToken = async (username: string, password: string) => {
+export const registerNewUserAndGetToken = async (username: string, password: string, imgBase64: string) => {
      const body = {
           username,
-          password
+          password,
+          userLogImage: imgBase64
      }
      try {
           console.log(body);
           const res = await axios.post('/sign', body);
           return res.data;
      } catch (error) {
-          
+
           console.log(`Registering new user. Error ${error.response?.data}`);
           return null;
      }

@@ -1,8 +1,7 @@
 import { UsersSearchAction } from "../../types/usersSearch";
-
-export const SET_USERS_SEARCH_MODE_ACTIVE_SYNC = 'SET_USERS_SEARCH_MODE_ACTIVE_SYNC';
+import { searchUsersEnum } from '../../enums/searchUsersEnum';
 
 export const setUsersSearchModeActivesSyncAction = (active: boolean): UsersSearchAction => ({
-     type: SET_USERS_SEARCH_MODE_ACTIVE_SYNC,
+     type: searchUsersEnum.SET_USERS_SEARCH_MODE_ACTIVE_SYNC,
      payload: { active }
 })

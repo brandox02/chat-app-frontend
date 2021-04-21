@@ -1,5 +1,5 @@
-import IChat from '../../types/Chat'
-
+import IChat from '../../types/Chat';
+import { findChatsEnumThunk, UPDATE_CHATS, DELETE_CHATS } from '../enums/chatsEnums';
 export type IChats = IChat[]
 
 export type ChatsDispatch = (arg0: ChatsAction) => void
@@ -10,9 +10,25 @@ export interface ChatsState {
      result: IChat[]
 }
 
-export interface ChatsAction {
-     type: string,
+interface IUpdateChatsAction {
+     type: typeof UPDATE_CHATS,
+     payload: {
+          chatId: string,
+          chat: IChat
+     }
+}
+
+interface IFindChatsAction {
+     type: findChatsEnumThunk,
      payload?: IChats | Error
 }
+
+interface IDeleteChatAction {
+     type: typeof DELETE_CHATS,
+     payload: string
+}
+
+export type ChatsAction = IFindChatsAction | IUpdateChatsAction | IDeleteChatAction
+
 
 

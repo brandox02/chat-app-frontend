@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import fotoPerfil from '../../images/foto-perfil.png';
 import ChatCard from './ChatCard';
 import { useDebounce } from 'use-debounce';
@@ -11,9 +11,13 @@ import { UsersSearchState } from '../../redux/types/usersSearch';
 import { findChatAction } from '../../redux/actions/chatActions/findChatAction';
 import { setIndexUserSearchedSelectedAction } from '../../redux/actions/SearchUsersActions/setIndexUserSearchedSelectedAction';
 import { searchUsersByusernameAction } from '../../redux/actions/SearchUsersActions/searchUsersAction';
+import logoutImage from '../../images/logout.png';
+import './style.css';
+import { context, VIEWS } from '../Background/BackgroundReducer'
+
 
 function ViewListaChat() {
-
+    const { setView } = useContext(context);
     const dispatch = useDispatch();
     const userState: UserState = useSelector((state: State) => state.user);
     const chatsState: ChatsState = useSelector((state: State) => state.chats);
@@ -63,6 +67,11 @@ function ViewListaChat() {
         const value = e.currentTarget.value;
         setInputSearch(value);
     }
+    function logOut() {
+        localStorage.removeItem('token');
+        setView(VIEWS.VIEW_LOGIN.value);
+
+    }
 
     return (
         <div className=' view-lista-chat-container' style={{ backgroundColor: 'white' }}>
@@ -71,12 +80,15 @@ function ViewListaChat() {
                 <div className="spinner-border ml-2 text-primary" style={{ width: 60, height: 60 }} />
             </div>
             {/* HEAD */}
-            <div className="bg-primary d-flex justify-content-between px-4 py-3 border-shadow-title " >
+            <div className="bg-primary d-flex justify-content-between px-4 py-3 border-shadow-title" >
                 <div className=''>
                     <h3 className='c-white'>Chat App</h3>
                     <span className='c-white '>{userState.result.username}</span>
                 </div>
-                <img src={fotoPerfil} alt="foto de perfil" width='70px' className='rounded-circle mx-2' />
+                <div className='d-flex align-items-center'>
+                    <img src={fotoPerfil} alt="foto de perfil" width='70px' className='rounded-circle mx-2' />
+                    <img src={logoutImage} alt="cerrar sesion" width='30px' height='30px' className='mx-2 hover' onClick={logOut} />
+                </div>
             </div>
             {/* BODY */}
             <div className="mt-1">

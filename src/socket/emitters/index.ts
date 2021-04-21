@@ -1,6 +1,6 @@
 import socket from '../index';
 import { socketId } from '../../socket/listeners/index';
-import { INewMessageSocketEmit, INewConnectionSocketEmit, IDeleteChatSocketEmit } from '../../types/Socket';
+import { INewMessageSocketEmit, INewConnectionSocketEmit, IDeleteChatSocketEmit } from '../../types/socket';
 
 export function sendNewNotificationMessageToServer(chatId: string) {
 

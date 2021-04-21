@@ -6,11 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUserByToken } from '../../services/userServices';
 import { context, reducer, VIEWS } from './BackgroundReducer';
 import { verifyValidToken } from '../../services/authServices';
-import Login from '../ViewAuth/Login';
-import Signin from '../ViewAuth/Signin';
+import Login from '../ViewAuth/login/Login';
+import Signin from '../ViewAuth/signin/Signin';
 import { State } from '../../redux/types';
 import { findUserApiAction } from '../../redux/actions/userActions/findUserAction';
-import { findChatsAction } from '../../redux/actions/chatsAction';
+import { findChatsAction } from '../../redux/actions/chatsActions/findChatAction';
 import { findChatAction } from '../../redux/actions/chatActions/findChatAction';
 import { socketId } from '../../socket/listeners/index'
 import { emiteNewConnection } from '../../socket/emitters';

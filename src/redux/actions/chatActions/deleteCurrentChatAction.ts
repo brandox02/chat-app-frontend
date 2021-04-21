@@ -1,29 +1,28 @@
 import { State } from '../../types';
 import { ChatAction, ChatState } from '../../types/chat';
-import { findChatsAction } from '../chatsAction';
+import { findChatsAction } from '../chatsActions/findChatAction';
 import { useContext } from 'react';
 import { context, VIEWS } from '../../../components/Background/BackgroundReducer';
 import { deleteChatApi } from '../../../services/chatServices';
 import { emitDeleteChat } from '../../../socket/emitters';
 import { Dispatch } from 'redux';
 import { findChatAction } from './findChatAction';
+import { chatDeleteThunk } from '../../enums/chatEnums';
+import { deleteChatsAction } from '../chatsActions/deleteChatAction';
 
-export const DELETE_CHAT_API_SUCESSS = 'DELETE_CHAT_API_SUCESSS';
-export const DELETE_CHAT_API_STARTED = 'DELETE_CHAT_API_STARTED';
-export const DELETE_CHAT_API_ERROR = 'DELETE_CHAT_API_ERROR';
-
-const deleteChatApiStarted = (): ChatAction => ({
-     type: DELETE_CHAT_API_STARTED,
+export const deleteChatApiStarted = (): ChatAction => ({
+     type: chatDeleteThunk.DELETE_CHAT_API_ERROR,
 });
 
 export const deleteChatApiSuccess = (): ChatAction => ({
-     type: DELETE_CHAT_API_SUCESSS
+     type: chatDeleteThunk.DELETE_CHAT_API_SUCESSS,
 });
 
 export const deleteChatApiError = (error: Error): ChatAction => ({
-     type: DELETE_CHAT_API_ERROR,
+     type: chatDeleteThunk.DELETE_CHAT_API_ERROR,
      payload: error
 });
+
 let setView = (arg0: string) => { };
 const F = () => {
      const f = useContext(context);
@@ -59,10 +58,26 @@ export const deleteChatActionContinues = (userId: string) => async (dispatch: Di
      }
 }
 
-export const deleteChatAction = (chatId: string) => async (dispatch: Dispatch<any>, getState: () => State) => {
-     dispatch(deleteChatApiStarted());
-     // const f = getState().chats.result[0]._id as string;
-     emitDeleteChat(chatId);
-     // the program flow is to the socket listener to the DELETE_CHAT socket event
+export const deleteCurrentChatAction = (deleteApi: boolean) => async (dispatch: Dispatch<any>, getState: () => State) => {
+     const chatId: string = getState().chat.result?._id as string;
+     if(deleteApi){
+          emitDeleteChat(chatId);
+     }else{
+          dispatch(deleteChatApiSuccess());
+
+     }
+     // if (deleteApi) {
+     //      dispatch(deleteChatApiStarted());
+     //      deleteChatApi(chatId,
+     //           () => {
+     //                // the program flow is to the socket listener to the DELETE_CHAT socket event
+     //                setView(VIEWS.VIEW_LISTA_CHAT.value);
+     //                dispatch(deleteChatsAction(chatId));
+     //           },
+     //           (error: Error) => dispatch(deleteChatApiError(error))
+     //      );
+     // } else {
+     //      dispatch(deleteChatApiSuccess());
+     // }
 }
 

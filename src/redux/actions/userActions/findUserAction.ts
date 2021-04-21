@@ -1,28 +1,24 @@
 import { getUserByIdApi } from '../../../services/userServices';
-import axiosClient from '../../../customAxios';
 import { State, } from '../../types';
 import { IUser, UserAction, UserDispatch } from '../../types/users'
-
-export const FIND_USER_API_SUCCESS = 'FIND_USER_API_SUCCESS';
-export const FIND_USER_API_ERROR = 'FIND_USER_API_ERROR';
-export const FIND_USER_API_STARTED = 'FIND_USER_API_STARTED';
+import { findUserEnumThunk } from '../../enums/userEnum'
 
 const findUserStarted = (): UserAction => ({
-     type: FIND_USER_API_STARTED
+     type: findUserEnumThunk.FIND_USER_API_STARTED
 })
 
 const findUserSuccess = (result: IUser): UserAction => ({
-     type: FIND_USER_API_SUCCESS,
+     type: findUserEnumThunk.FIND_USER_API_SUCCESS,
      payload: result
 })
 
 const findUserError = (error: Error): UserAction => ({
-     type: FIND_USER_API_ERROR,
+     type: findUserEnumThunk.FIND_USER_API_ERROR,
      payload: error
 })
 
 export const findUserApiAction = (userId: string) => (dispath: UserDispatch, getState: () => State) => {
-     
+
      // INIT DE ACTION 
      dispath(findUserStarted());
 

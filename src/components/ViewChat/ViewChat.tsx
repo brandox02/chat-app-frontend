@@ -6,7 +6,7 @@ import deleteChatImage from '../../images/delete-chat.png';
 import { context, VIEWS } from '../Background/BackgroundReducer';
 import { IMessage } from '../../types/Chat';
 import { formatAMPM } from '../../utils';
-import { createNewChat, deleteChatApi } from '../../services/chatServices';
+import { createNewChat } from '../../services/chatServices';
 import Message from './Message';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
@@ -17,10 +17,11 @@ import { UserState } from '../../redux/types/users';
 import { ChatsState } from '../../redux/types/chats';
 import { UsersSearchState } from '../../redux/types/usersSearch';
 import { findChatAction } from '../../redux/actions/chatActions/findChatAction';
-import { chatUpdateConstants, updateChatAction } from '../../redux/actions/chatActions/updateChatAction';
-import { deleteChatAction } from '../../redux/actions/chatActions/deleteChatAction';
+import { updateChatAction } from '../../redux/actions/chatActions/updateChatAction';
+import { chatUpdateEnum } from '../../redux/enums/chatEnums';
+import { deleteCurrentChatAction } from '../../redux/actions/chatActions/deleteCurrentChatAction';
 import { ChatState, IChat } from '../../redux/types/chat';
-
+import { findChatsAction } from '../../redux/actions/chatsActions/findChatAction';
 
 const ViewChat = () => {
 
@@ -39,6 +40,7 @@ const ViewChat = () => {
     const [showToastDeleteChat, setShowToastDeleteChat] = useState(false);
     const canRenderChat = searchUsersState.result.indexUserSearchedSelected !== -1 || chatResult ? true : false;
 
+    const divMessagesContainer = useRef<HTMLDivElement>(null);
     // this useEffect is used every time that change the searchUserSelected to find if the search user selected match with an exists chat with me
     useEffect(() => {
         let _matchUserFindedBetweenUserChats = false;
@@ -58,6 +60,10 @@ const ViewChat = () => {
             setMatchUserFindedBetweenUserChats(true);
         } else setMatchUserFindedBetweenUserChats(false);
     }, [searchUsersState.result.indexUserSearchedSelected]);
+
+    useEffect(() => {
+        moveScrollToBottom();
+    }, [chatResult && chatResult.messages]);
 
     const handlerSetView = () => {
         setView(VIEWS.VIEW_LISTA_CHAT.value);
@@ -80,13 +86,12 @@ const ViewChat = () => {
                             date: new Date(),
                             text: textInput,
                         }
-
                         dispatch(updateChatAction(chatId, {
-                            type: chatUpdateConstants.NEW_MESSAGE, value: message
+                            type: chatUpdateEnum.NEW_MESSAGE, value: message
                         }));
                         setMatchUserFindedBetweenUserChats(true);
                         setTextInput('');
-
+                        dispatch(findChatsAction());
                     },
                     (error) => {
                         alert('Hubo un error al crear el chat: ' + error.message);
@@ -103,7 +108,7 @@ const ViewChat = () => {
             const chatId = chatResult._id as string
             // insertNewMessage();
             dispatch(updateChatAction(chatId, {
-                type: chatUpdateConstants.NEW_MESSAGE, value: message
+                type: chatUpdateEnum.NEW_MESSAGE, value: message
             }));
             setTextInput('');
         }
@@ -120,7 +125,7 @@ const ViewChat = () => {
                 // getting correct username. the API return two members
                 const f = chatState.result;
                 return f.members[0].username === userState.result.username ? f.members[1].username : f.members[0].username;
-            } else return null
+            }
 
         }
     }
@@ -157,14 +162,8 @@ const ViewChat = () => {
         });
     }
     const deleteChat = () => {
-        const chatId = chatResult._id as string;
-        dispatch(deleteChatAction(chatId));
+        dispatch(deleteCurrentChatAction(true));
     }
-    const divMessagesContainer = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        moveScrollToBottom();
-    }, [chatResult && chatResult.messages])
 
     const moveScrollToBottom = () => {
         const f = divMessagesContainer.current

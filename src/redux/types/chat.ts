@@ -1,23 +1,30 @@
 import IChat, { IMessage } from '../../types/Chat';
-import { IUser } from './users';
-import { chatUpdateConstants } from '../actions/chatActions/updateChatAction';
+import { chatUpdateEnum, chatUpdateThunk, chatDeleteThunk, chatFindThunk, SET_CHAT } from '../enums/chatEnums';
 export type { IChat };
-chatUpdateConstants.DELETE_MESSAGE
+
 export type ChatDispatch = (arg0: ChatAction) => void
 
 export interface ChatState {
      loading: boolean,
      error: null | Error,
      result: IChat | null
-}
+};
 
 export interface ChatAction {
-     type: string,
-     payload?: IChat | Error
-}
+     type: chatUpdateThunk | chatDeleteThunk | chatFindThunk | SET_CHAT,
+     payload?: IChat | Error 
+};
 
-export interface IChatUpdate {
-     type: typeof chatUpdateConstants.DELETE_MESSAGE | typeof chatUpdateConstants.NEW_MESSAGE,
-     value: IMessage | string
-}
+interface IChatUpdateDeleteMessage {
+     type: chatUpdateEnum.DELETE_MESSAGE
+     value: string
+};
 
+
+interface IChatUpdateNewMessage {
+     type: chatUpdateEnum.NEW_MESSAGE
+     value: IMessage
+};
+
+
+export type IChatUpdate = IChatUpdateDeleteMessage  | IChatUpdateNewMessage ;

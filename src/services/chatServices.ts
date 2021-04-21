@@ -3,8 +3,8 @@ import axiosClient from '../customAxios';
 import { IChat } from '../redux/types/chat';
 import { chatExampleObject, IMessage } from '../types/Chat';
 import { AxiosError } from 'axios'
-import { sendNewNotificationMessageToServer } from '../socket/emitters';
-import store from '../redux';
+
+
 export function insertNewMessage(
      chatId: string, message: IMessage,
      callbackSuccess?: (data?: IChat) => void,
@@ -25,7 +25,6 @@ export function insertNewMessage(
           });
 
 }
-
 
 export function createNewChat(
      memberId1: string, memberId2: string, callbackSuccess?: (data: IChat) => void,

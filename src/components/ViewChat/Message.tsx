@@ -2,9 +2,10 @@ import React from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../../redux/types';
-import { updateChatAction, chatUpdateConstants } from '../../redux/actions/chatActions/updateChatAction';
+import { updateChatAction } from '../../redux/actions/chatActions/updateChatAction';
+import { chatUpdateEnum } from '../../redux/enums/chatEnums'
 import { IChat } from '../../redux/types/chat';
-import { ChatAction } from '../../redux/types/chat';
+
 interface IProps {
     children: string,
     username: string,
@@ -20,12 +21,12 @@ const Message = ({ children, date, username, iAm, messageId }: IProps) => {
     const [floatValue, bgColorvalue] = iAm ? ['right', '#F5EEF8'] : ['left', '#EBDEF0'];
 
     const deleteMessage = () => {
-        const {_id} = chatResult;
+        const { _id } = chatResult;
         const chatId: string = _id as string;
 
         dispatch(
             updateChatAction(chatId, {
-            type: chatUpdateConstants.DELETE_MESSAGE,
+                type: chatUpdateEnum.DELETE_MESSAGE,
                 value: messageId
             })
         );

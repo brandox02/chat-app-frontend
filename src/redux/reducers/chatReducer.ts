@@ -1,8 +1,8 @@
-import { ChatAction, ChatState, IChat } from '../types/chat'
-import { FIND_CHAT_API_ERROR, FIND_CHAT_API_STARTED, FIND_CHAT_API_SUCESSS } from '../actions/chatActions/findChatAction'
-import { UPDATE_CHAT_API_ERROR, UPDATE_CHAT_API_STARTED, UPDATE_CHAT_API_SUCESSS } from '../actions/chatActions/updateChatAction'
-import { DELETE_CHAT_API_STARTED, DELETE_CHAT_API_SUCESSS, DELETE_CHAT_API_ERROR } from '../actions/chatActions/deleteChatAction'
-import store from '../'
+import { ChatAction, ChatState, IChat } from '../types/chat';
+import store from '../';
+import { chatUpdateThunk, chatDeleteThunk, chatFindThunk, chatUpdateEnum, SET_CHAT } from '../enums/chatEnums';
+
+
 const initialState: ChatState = {
      error: null,
      loading: false,
@@ -12,24 +12,30 @@ const initialState: ChatState = {
 function reducer(state = initialState, action: ChatAction): ChatState {
      if (store) {
           switch (action.type) {
-               case FIND_CHAT_API_STARTED:
+
+               case chatFindThunk.FIND_CHAT_API_STARTED:
                     return { ...state, loading: true }
-               case FIND_CHAT_API_SUCESSS:
+               case chatFindThunk.FIND_CHAT_API_SUCESSS:
                     return { ...state, loading: false, result: action.payload as IChat }
-               case FIND_CHAT_API_ERROR:
+               case chatFindThunk.FIND_CHAT_API_ERROR:
                     return { ...state, loading: false, error: action.payload as Error }
-               case UPDATE_CHAT_API_STARTED:
+
+               case chatUpdateThunk.UPDATE_CHAT_API_STARTED:
                     return { ...state, loading: true }
-               case UPDATE_CHAT_API_SUCESSS:
+               case chatUpdateThunk.UPDATE_CHAT_API_SUCESSS:
                     return { ...state, loading: false }
-               case UPDATE_CHAT_API_ERROR:
+               case chatUpdateThunk.UPDATE_CHAT_API_ERROR:
                     return { ...state, loading: false, error: action.payload as Error }
-               case DELETE_CHAT_API_STARTED:
+
+               case chatDeleteThunk.DELETE_CHAT_API_STARTED:
                     return { ...state, loading: true }
-               case DELETE_CHAT_API_SUCESSS:
+               case chatDeleteThunk.DELETE_CHAT_API_SUCESSS:
                     return { ...state, loading: false, result: null }
-               case DELETE_CHAT_API_ERROR:
+               case chatDeleteThunk.DELETE_CHAT_API_ERROR:
                     return { ...state, loading: false, error: action.payload as Error }
+
+               case SET_CHAT:
+                    return { ...state, result: action.payload as IChat };
 
           }
      }
