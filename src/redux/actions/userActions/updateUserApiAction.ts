@@ -3,24 +3,23 @@ import { State, } from '../../types';
 import { IUser, IUserUpdate, UserAction, UserDispatch } from '../../types/users';
 import { updateUserEnumThunk, updateUserEnum } from '../../enums/userEnum'
 
-
-const updateUserStarted = (): UserAction => ({
+const updateUserApiStarted = (): UserAction => ({
      type: updateUserEnumThunk.UPDATE_USER_API_STARTED
 })
 
-const updateUserSuccess = (result: IUser): UserAction => ({
+const updateUserApiSuccess = (result: IUser): UserAction => ({
      type: updateUserEnumThunk.UPDATE_USER_API_SUCCESS,
      payload: result
 })
 
-const updateUserError = (error: Error): UserAction => ({
+const updateUserApiError = (error: Error): UserAction => ({
      type: updateUserEnumThunk.UPDATE_USER_API_ERROR,
      payload: error
 })
 
-export const updateUserAction = (param: IUserUpdate) => (dispath: UserDispatch, getState: () => State) => {
+export const updateUserApiAction = (param: IUserUpdate) => (dispath: UserDispatch, getState: () => State) => {
      // INIT DE ACTION 
-     dispath(updateUserStarted());
+     dispath(updateUserApiStarted());
      const userId = getState().user.result._id as string;
 
      switch (param.type) {
@@ -29,8 +28,8 @@ export const updateUserAction = (param: IUserUpdate) => (dispath: UserDispatch, 
                setUserActiveApi(
                     userId,
                     active,
-                    userUpdated => dispath(updateUserSuccess(userUpdated)),
-                    error => dispath(updateUserError(error))
+                    userUpdated => dispath(updateUserApiSuccess(userUpdated)),
+                    error => dispath(updateUserApiError(error))
                );
                break;
 

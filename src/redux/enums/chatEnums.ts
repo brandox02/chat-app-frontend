@@ -3,8 +3,13 @@ export enum chatUpdateEnum {
      DELETE_MESSAGE,
 };
 
-export const SET_CHAT = 'SET_CHAT';
-export type SET_CHAT = typeof SET_CHAT;
+export const UPDATE_CHAT = 'UPDATE_CHAT';
+export type UPDATE_CHAT = typeof UPDATE_CHAT;
+
+
+export const DELETE_CHAT = 'DELETE_CHAT';
+export type DELETE_CHAT = typeof DELETE_CHAT;
+
 
 export enum chatUpdateThunk {
      UPDATE_CHAT_API_STARTED = "UPDATE_CHAT_API_STARTED",
@@ -23,3 +28,4 @@ export enum chatDeleteThunk {
      DELETE_CHAT_API_SUCESSS = 'DELETE_CHAT_API_SUCESSS',
      DELETE_CHAT_API_ERROR = 'DELETE_CHAT_API_ERROR'
 }
+

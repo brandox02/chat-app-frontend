@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/components/ViewAuth/style.css"],"names":[],"mappings":"AAEA,aACK,cACL","file":"main.a78fc282.chunk.css","sourcesContent":["\r\n\r\n.hover:hover{\r\n     cursor: pointer;\r\n}\r\n\r\n"]}

@@ -9,9 +9,9 @@ import { verifyValidToken } from '../../services/authServices';
 import Login from '../ViewAuth/login/Login';
 import Signin from '../ViewAuth/signin/Signin';
 import { State } from '../../redux/types';
-import { findUserApiAction } from '../../redux/actions/userActions/findUserAction';
-import { findChatsAction } from '../../redux/actions/chatsActions/findChatAction';
-import { findChatAction } from '../../redux/actions/chatActions/findChatAction';
+import { findUserApiAction } from '../../redux/actions/userActions/findUserApiAction';
+import { findChatsApiAction } from '../../redux/actions/chatsActions/findChatApiAction';
+import { findChatAction } from '../../redux/actions/chatActions/findChatApiAction';
 import { socketId } from '../../socket/listeners/index'
 import { emiteNewConnection } from '../../socket/emitters';
 
@@ -53,7 +53,7 @@ const Background = () => {
         if (!userState.loading && userState.result.username !== "") {
             let userId: string = userState.result._id as string;
             emiteNewConnection(userId);
-            dispatch(findChatsAction())
+            dispatch(findChatsApiAction())
         };
     }, [userState.loading]);
 

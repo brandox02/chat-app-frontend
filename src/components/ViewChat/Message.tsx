@@ -2,7 +2,7 @@ import React from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../../redux/types';
-import { updateChatAction } from '../../redux/actions/chatActions/updateChatAction';
+import { updateChatAction } from '../../redux/actions/chatActions/updateChatApiAction';
 import { chatUpdateEnum } from '../../redux/enums/chatEnums'
 import { IChat } from '../../redux/types/chat';
 
@@ -36,12 +36,14 @@ const Message = ({ children, date, username, iAm, messageId }: IProps) => {
         <div className={` mx-3 my-2 rounded text-break p-2 float-${floatValue} border-shadow`}
             style={{ width: '70%', backgroundColor: bgColorvalue, boxSizing: 'content-box', position: 'relative' }}
         >
-            <Dropdown style={{ position: 'absolute', bottom: 0, right: 0, transform: 'scale(0.8)', zIndex: 1 }}>
-                <Dropdown.Toggle variant="secondary"></Dropdown.Toggle>
-                <Dropdown.Menu >
-                    <Dropdown.Item onClick={deleteMessage}>Borrar Mensaje</Dropdown.Item>
-                </Dropdown.Menu>
-            </Dropdown>
+            {iAm && (
+                <Dropdown style={{ position: 'absolute', bottom: 0, right: 0, transform: 'scale(0.8)', zIndex: 1 }}>
+                    <Dropdown.Toggle variant="secondary"></Dropdown.Toggle>
+                    <Dropdown.Menu >
+                        <Dropdown.Item onClick={deleteMessage}>Borrar Mensaje</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            )}
             {/* ENCABEZADO */}
             <div className='d-flex justify-content-between '>
                 <label className='text-nowrap  '>{username}</label>

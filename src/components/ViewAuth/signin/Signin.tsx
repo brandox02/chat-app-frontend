@@ -3,8 +3,8 @@ import { useDispatch } from 'react-redux';
 import { useDebounce } from 'use-debounce/lib';
 import { registerNewUserAndGetToken } from '../../../services/authServices';
 import { getUserByToken } from '../../../services/userServices';
-import { findChatsAction } from '../../../redux/actions/chatsActions/findChatAction';
-import { findUserApiAction } from '../../../redux/actions/userActions/findUserAction';
+import { findChatsApiAction } from '../../../redux/actions/chatsActions/findChatApiAction';
+import { findUserApiAction } from '../../../redux/actions/userActions/findUserApiAction';
 import { setTokenLocalStorage } from '../../../utils/localStorage';
 import { context, VIEWS } from '../../Background/BackgroundReducer';
 import { validateUserSign, validatePassSign } from '../Validation';
@@ -54,7 +54,7 @@ const SignIn = () => {
                // cargamos data a redux y la aplicacion
                const user = await getUserByToken(token);
                dispatch(findUserApiAction(user._id));
-               dispatch(findChatsAction());
+               dispatch(findChatsApiAction());
                setView(VIEWS.VIEW_LISTA_CHAT.value);
           }
      }

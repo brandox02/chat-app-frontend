@@ -1,3 +1,6 @@
+export const INSERT_CHAT = 'INSERT_CHAT'
+export type INSERT_CHAT = 'INSERT_CHAT'
+
 export enum findChatsEnumThunk {
 
      FIND_CHATS_API_SUCESSS = 'FIND_CHATS_API_SUCESSS',
@@ -6,5 +9,12 @@ export enum findChatsEnumThunk {
 
 }
 
+export enum chatInsertThunk {
+     INSERT_CHAT_API_STARTED = 'INSERT_CHAT_API_STARTED',
+     INSERT_CHAT_API_SUCESSS = 'INSERT_CHAT_API_SUCESSS',
+     INSERT_CHAT_API_ERROR = 'INSERT_CHAT_API_ERROR'
+}
+
+
 export const UPDATE_CHATS = 'UPDATE_CHATS';
-export const DELETE_CHATS = 'DELETE_CHATS'
+export const DELETE_CHAT = 'DELETE_CHAT';

@@ -1,6 +1,6 @@
 import IChat from '../../types/Chat';
-import { findChatsEnumThunk, UPDATE_CHATS, DELETE_CHATS } from '../enums/chatsEnums';
-export type IChats = IChat[]
+import { findChatsEnumThunk, UPDATE_CHATS, DELETE_CHAT, chatInsertThunk,INSERT_CHAT } from '../enums/chatsEnums';
+export type IChats = IChat[];
 
 export type ChatsDispatch = (arg0: ChatsAction) => void
 
@@ -24,11 +24,21 @@ interface IFindChatsAction {
 }
 
 interface IDeleteChatAction {
-     type: typeof DELETE_CHATS,
+     type: typeof DELETE_CHAT,
      payload: string
 }
 
-export type ChatsAction = IFindChatsAction | IUpdateChatsAction | IDeleteChatAction
+interface IInsertChatAction {
+     type: chatInsertThunk,
+     payload?: IChat | Error
+}
+
+interface IChatsAction {
+     type: INSERT_CHAT,
+     payload: IChat
+}
+
+export type ChatsAction = IFindChatsAction | IUpdateChatsAction | IDeleteChatAction | IInsertChatAction | IChatsAction;
 
 
 

@@ -15,9 +15,7 @@ const ChatCard = ({ name, urlImageProfile, text }: IChatCard) => {
     const handler = () => {
         setView(VIEWS.VIEW_CHAT.value);
     }
-    useEffect(() => {
 
-    }, [])
     return (
         <div className=' pr-2 pl-1 mb-3 '  onClick={handler} >
             <div className='d-flex flex-nowrap border-shadow w-100 my-2 p-2 overflow-hidden' style={{ backgroundColor: '#F9F6FA' }}>

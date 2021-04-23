@@ -1,6 +1,6 @@
 import { ChatAction, ChatState, IChat } from '../types/chat';
 import store from '../';
-import { chatUpdateThunk, chatDeleteThunk, chatFindThunk, chatUpdateEnum, SET_CHAT } from '../enums/chatEnums';
+import { chatUpdateThunk, chatDeleteThunk, chatFindThunk, UPDATE_CHAT, DELETE_CHAT } from '../enums/chatEnums';
 
 
 const initialState: ChatState = {
@@ -23,7 +23,7 @@ function reducer(state = initialState, action: ChatAction): ChatState {
                case chatUpdateThunk.UPDATE_CHAT_API_STARTED:
                     return { ...state, loading: true }
                case chatUpdateThunk.UPDATE_CHAT_API_SUCESSS:
-                    return { ...state, loading: false }
+                    return { ...state, loading: false, result: action.payload as IChat }
                case chatUpdateThunk.UPDATE_CHAT_API_ERROR:
                     return { ...state, loading: false, error: action.payload as Error }
 
@@ -34,7 +34,11 @@ function reducer(state = initialState, action: ChatAction): ChatState {
                case chatDeleteThunk.DELETE_CHAT_API_ERROR:
                     return { ...state, loading: false, error: action.payload as Error }
 
-               case SET_CHAT:
+               case DELETE_CHAT:
+                    return { ...state, result: null }
+
+
+               case UPDATE_CHAT:
                     return { ...state, result: action.payload as IChat };
 
           }

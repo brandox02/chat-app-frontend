@@ -3,6 +3,7 @@ import axiosClient from '../customAxios';
 import { IChat } from '../redux/types/chat';
 import { chatExampleObject, IMessage } from '../types/Chat';
 import { AxiosError } from 'axios'
+import { IChats } from '../redux/types/chats';
 
 
 export function insertNewMessage(
@@ -47,11 +48,11 @@ export function createNewChat(
 }
 
 export function deleteChatApi(
-     chatId: string, callbackSuccess?: () => void,
+     chatId: string, callbackSuccess?: (chats: IChats) => void,
      callbackError?: (error: AxiosError) => void
 ): void {
      axiosClient.delete('/chat/' + chatId)
-          .then((res: AxiosResponse<string>) => callbackSuccess && callbackSuccess())
+          .then((res: AxiosResponse<IChats>) => callbackSuccess && callbackSuccess(res.data))
           .catch((error: AxiosError) => {
                console.log(`Deleting chat. Error ${error.response?.data}`);
                callbackError && callbackError(error)
@@ -60,7 +61,7 @@ export function deleteChatApi(
 }
 
 export function deleteMessageAPI(
-     chatId: string, messageId: string, callbackSuccess?: () => void,
+     chatId: string, messageId: string, callbackSuccess?: (chat: IChat) => void,
      callbackError?: (error: AxiosError) => void
 ): void {
      const bodyParam = {
@@ -72,7 +73,7 @@ export function deleteMessageAPI(
      }
 
      axiosClient.put('/chat/' + chatId, bodyParam)
-          .then((res: AxiosResponse<IChat>) => callbackSuccess && callbackSuccess())
+          .then((res: AxiosResponse<IChat>) => callbackSuccess && callbackSuccess(res.data))
           .catch((error: AxiosError) => {
                console.log(`delete message. Error ${error.response?.data}`);
                callbackError && callbackError(error)

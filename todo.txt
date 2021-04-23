@@ -1,7 +1,3 @@
-* Add socket.io to get real-time for example when the user send message to other user
-
 * Change system of setView, it maybe can implement the react-router-dom and put it in redux
-
-* update when we throw a delete/update/insert action do not fetch to API else if replace the data by redux wit a payload 
 
 * i was thinking a god way to implement de sockets

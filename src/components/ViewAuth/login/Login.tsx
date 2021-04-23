@@ -7,8 +7,8 @@ import { useDebounce } from 'use-debounce'
 import { context, VIEWS } from '../../Background/BackgroundReducer';
 import { IUser } from '../../../redux/types/users';
 import { State } from '../../../redux/types';
-import { findChatsAction } from '../../../redux/actions/chatsActions/findChatAction';
-import { findUserApiAction } from '../../../redux/actions/userActions/findUserAction';
+import { findChatsApiAction } from '../../../redux/actions/chatsActions/findChatApiAction';
+import { findUserApiAction } from '../../../redux/actions/userActions/findUserApiAction';
 import CameraTest from './FacialLogin';
 import '../style.css';
 const initialState = { messageError: '', bootstrapStyleInput: '' }
@@ -43,7 +43,7 @@ const Login = () => {
           // validation to do not entry first time
           if (!userState.loading && passInput !== '') {
                // console.log('yo no te puedo hablar');
-               dispatch(findChatsAction());
+               dispatch(findChatsApiAction());
           }
      }, [userState.loading]);
 

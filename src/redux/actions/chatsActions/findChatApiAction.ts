@@ -17,7 +17,7 @@ const findChatsApiError = (error: Error): ChatsAction => ({
      payload: error
 });
 
-export const findChatsAction = () => (dispatch: ChatsDispatch, getState: () => State) => {
+export const findChatsApiAction = () => (dispatch: ChatsDispatch, getState: () => State) => {
      dispatch(findChatsApiStarted());
      const userId = getState().user.result._id as string;
 
