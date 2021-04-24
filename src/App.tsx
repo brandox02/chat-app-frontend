@@ -14,7 +14,7 @@ window.addEventListener('beforeunload', function (e) {
   }, 2000);
 });
 
-
+console.log('production is running', process.env.REACT_APP_HOST_ONLINE);
 
 function App() {
   return (
