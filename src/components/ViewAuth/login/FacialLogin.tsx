@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import axiosClient from '../../../customAxios';
 import backImage from '../../../images/back.png';
+import { verifyUserCorrectByFacialRecognitionService } from '../../../services/authServices';
 
 interface Props {
      switchFacialReconitionAndLoginWithCredentialsViews: () => void,
@@ -13,26 +14,22 @@ function FacialLogin({ switchFacialReconitionAndLoginWithCredentialsViews, runLo
      const [Loading, setLoading] = useState(false);
 
      async function capture() {
-          const imageSrc = (webcamRef.current as any).getScreenshot();
-          const obj = {
-               resource: {
-                    userId: '604ee937a0b0111d94cb4ece',
-                    base64image: imageSrc
-               }
-          }
           setLoading(true);
-          axiosClient.post('/log', obj)
-               .then(res => {
+          const imageSrc = (webcamRef.current as any).getScreenshot();
+          verifyUserCorrectByFacialRecognitionService(imageSrc,
+               (data) => {
                     setLoading(false);
-                    const { username, token } = res.data;
+                    const { username, token } = data;
                     if (token) {
-                         console.log(res.data);
+                         console.log(data);
                          runLoadApp(token);
                          alert('Has sido indentificado como ' + username);
                     } else {
                          alert('Tu cara no coincide')
                     }
-               }).catch(error => console.log(error));
+               },
+               (error => setLoading(false))
+          );
      }
      return (
           <div className='d-flex justify-content-center align-items-center w-100 vh-100' style={{ backgroundColor: '#F6F6F6', position: 'relative' }}>
@@ -55,14 +52,14 @@ function FacialLogin({ switchFacialReconitionAndLoginWithCredentialsViews, runLo
                     />
                     <h2 className='mb-4 text-center'>Inicio de Sesion</h2>
                     {/* {Loading && <h1>Loading...</h1>} */}
-                    
-                         <Webcam
-                              audio={false}
-                              ref={webcamRef}
-                              screenshotFormat="image/jpeg"
-                              className='w-100 mb-3'
-                         />
-                    
+
+                    <Webcam
+                         audio={false}
+                         ref={webcamRef}
+                         screenshotFormat="image/jpeg"
+                         className='w-100 mb-3'
+                    />
+
                     <p>Debe mirar a la camara y no hacer expresiones extranas, porfavor tener los menos elementos posibles y tambien que solo se vea su cara de preferencia</p>
                     <button onClick={capture} className='btn btn-primary'>Iniciar Sesion</button>
                </div>

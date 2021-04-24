@@ -23,7 +23,7 @@ export const userExistsFetch = async (username: string) => {
           return userExistsFetch.data[0] ? true : false;
 
      } catch (error) {
-          console.log(`Verifing user exists. Error ${error.response?.data}`);
+          // console.log(`Verifing user exists. Error ${error.response?.data}`);
           return null;
      }
 }

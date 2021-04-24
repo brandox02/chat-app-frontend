@@ -1,3 +1,5 @@
 * Change system of setView, it maybe can implement the react-router-dom and put it in redux
 
 * i was thinking a god way to implement de sockets
+
+* when created a account do not pass to aplication
