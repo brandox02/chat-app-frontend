@@ -20,7 +20,7 @@ function LoadMySelfChats() {
                {chatsState.result.map(chat => {
                     const member = chat.members[1];
                     const lastMessage = chat.messages[chat.messages.length - 1];
-
+                    
                     const f = chat;
                     const username = f.members[0].username === userState.result.username ? f.members[1].username : f.members[0].username;
                     return (
