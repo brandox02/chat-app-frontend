@@ -1,8 +1,0 @@
-
-
-// generando clases para todos los font-sizes
-@for $i from 1 through 100 {
-    .fs-#{$i}{
-        font-size: #{$i}px;
-    }
-}
