@@ -3,7 +3,7 @@ import userReducer from './reducers/userReducer';
 import chatsReducer from './reducers/chatsReducer';
 import chatReducer from './reducers/chatReducer';
 import UsersFindedReducer from './reducers/searchUsersReducer';
-import { composeWithDevTools } from 'redux-devtools-extension';
+
 import thunk from 'redux-thunk';
 import { CombineReducer } from './types';
 
@@ -16,4 +16,4 @@ const reducers: CombineReducer = combineReducers({
 })
 
 
-export default createStore(reducers, composeWithDevTools(applyMiddleware(thunk)));
+export default createStore(reducers, applyMiddleware(thunk));
