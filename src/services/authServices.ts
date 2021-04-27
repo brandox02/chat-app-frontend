@@ -1,7 +1,9 @@
 import { AxiosResponse } from 'axios';
 import axios from '../customAxios'
 
-export const registerNewUserAndGetToken = async (username: string, password: string, imgBase64: string) => {
+interface Fe { token: string | null, faceDetecting: boolean, faceRecognition: boolean }
+
+export async function registerNewUserAndGetToken (username: string, password: string, imgBase64: string){
      const body = {
           username,
           password,
@@ -9,18 +11,18 @@ export const registerNewUserAndGetToken = async (username: string, password: str
      }
      try {
           console.log(body);
-          const res = await axios.post('/sign', body);
+          const res: AxiosResponse<Fe> = await axios.post('/sign', body);
           return res.data;
-     } catch (error) {
 
+     } catch (error) {
           console.log(`Registering new user. Error ${error.response?.data}`);
-          return null;
      }
 }
 
-interface F {username: string, token: string}
+interface F { username: string | null, token: string | null, faceDetecting: boolean | null }
 
-export function verifyUserCorrectByFacialRecognitionService(imageSrc: string,
+export function verifyUserCorrectByFacialRecognitionService(
+     imageSrc: string,
      callbackSucefully?: (arg0: F) => void, callbackError?: (error: Error) => void
 ): void {
      const obj = {
