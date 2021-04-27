@@ -17,7 +17,7 @@ function FacialLogin({ switchFacialReconitionAndLoginWithCredentialsViews, runLo
           setLoading(true);
           const imageSrc = (webcamRef.current as any).getScreenshot();
           verifyUserCorrectByFacialRecognitionService(imageSrc,
-               (data) => {
+               async (data) => {
                     setLoading(false);
                     const { username, token, faceDetecting } = data;
                     if (!faceDetecting) {
@@ -26,8 +26,7 @@ function FacialLogin({ switchFacialReconitionAndLoginWithCredentialsViews, runLo
                          alert('No hay una cuenta que tenga tu cara anexada');
                     }else if (username && token) {
                          console.log(data);
-                         runLoadApp(token);
-                         
+                         await runLoadApp(token);   
                     } 
                },
                (error => setLoading(false))
