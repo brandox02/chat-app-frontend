@@ -17,16 +17,17 @@ function FacialLogin({ switchFacialReconitionAndLoginWithCredentialsViews, runLo
           setLoading(true);
           const imageSrc = (webcamRef.current as any).getScreenshot();
           verifyUserCorrectByFacialRecognitionService(imageSrc,
-               (data) => {
+               async (data) => {
                     setLoading(false);
-                    const { username, token } = data;
-                    if (token) {
+                    const { username, token, faceDetecting } = data;
+                    if (!faceDetecting) {
+                         alert('No se ha dectectado ninguna cara, intentalo de nuevo');
+                    }else if(!username){
+                         alert('No hay una cuenta que tenga tu cara anexada');
+                    }else if (username && token) {
                          console.log(data);
-                         runLoadApp(token);
-                         alert('Has sido indentificado como ' + username);
-                    } else {
-                         alert('Tu cara no coincide')
-                    }
+                         await runLoadApp(token);   
+                    } 
                },
                (error => setLoading(false))
           );

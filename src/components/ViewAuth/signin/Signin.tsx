@@ -51,18 +51,21 @@ const SignIn = () => {
           if (userValidationSign.messageError === '' && userValidationSign.messageError === '' && userInput !== '' && passInput !== '') {
                if (!webcamRef.current) throw new Error();
                const imageSrc = webcamRef.current.getScreenshot() as string;
-               const token = await registerNewUserAndGetToken(userInput, passInput, imageSrc);
+               const f = await registerNewUserAndGetToken(userInput, passInput, imageSrc);
+               console.log(f);
                setLoading(false);
-               if (token) {
-                    setTokenLocalStorage(token);
+               if(f?.faceDetecting == false){
+                    alert('no se ha detectado ningun rostro')
+               }else if (f?.faceRecognition) {
+                    alert('Lo sentimos pero ya hay una cuenta que tiene asociada tu cara');
+                    setView(VIEWS.VIEW_LOGIN.value);
+               } else if(f?.token){
+                    setTokenLocalStorage(f.token);
                     // cargamos data a redux y la aplicacion
-                    const user = await getUserByToken(token);
+                    const user = await getUserByToken(f.token);
                     dispatch(findUserApiAction(user._id));
                     dispatch(findChatsApiAction());
                     setView(VIEWS.VIEW_LISTA_CHAT.value);
-               } else {
-                    alert('Lo sentimos pero ya hay una cuenta que tiene asociada tu cara');
-                    setView(VIEWS.VIEW_LOGIN.value);
                }
           }
      }
