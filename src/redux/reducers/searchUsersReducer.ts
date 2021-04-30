@@ -1,6 +1,7 @@
 import { UsersSearchState, UsersSearchAction } from '../types/usersSearch';
 import { IUser } from '../types/users';
 import { searchUsersEnumThunk, searchUsersEnum } from '../enums/searchUsersEnum'
+import { SEARCH_USERS_RESET_STATE } from '../enums/searchUsersEnum';
 
 
 const initialState: UsersSearchState = {
@@ -34,6 +35,9 @@ function reducer(state = initialState, action: UsersSearchAction): UsersSearchSt
                     ...state, result: { ...state.result, indexUserSearchedSelected: action.payload.indexUserSearchedSelected as number }
                };
 
+
+          case SEARCH_USERS_RESET_STATE:
+               return initialState;
           default:
                return state;
      }

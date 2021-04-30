@@ -6,6 +6,9 @@ export enum chatUpdateEnum {
 export const UPDATE_CHAT = 'UPDATE_CHAT';
 export type UPDATE_CHAT = typeof UPDATE_CHAT;
 
+export const CHAT_RESET_STATE = 'CHAT_RESET_STATE';
+export type CHAT_RESET_STATE = 'CHAT_RESET_STATE';
+
 
 export const DELETE_CHAT = 'DELETE_CHAT';
 export type DELETE_CHAT = typeof DELETE_CHAT;

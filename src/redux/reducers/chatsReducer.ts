@@ -1,5 +1,5 @@
 import { ChatsAction, ChatsState, IChats } from '../types/chats';
-import { DELETE_CHAT, findChatsEnumThunk, UPDATE_CHATS, chatInsertThunk, INSERT_CHAT } from '../enums/chatsEnums';
+import { DELETE_CHAT, findChatsEnumThunk, UPDATE_CHATS, chatInsertThunk, INSERT_CHAT, CHATS_RESET_STATE } from '../enums/chatsEnums';
 import { IChat } from '../types/chat';
 
 const initialState: ChatsState = {
@@ -41,8 +41,11 @@ function reducer(state = initialState, action: ChatsAction): ChatsState {
                }
 
           case INSERT_CHAT:
-               return { ...state, result: [...state.result, action.payload] }
+               return { ...state, result: [...state.result, action.payload as IChat] }
 
+
+          case CHATS_RESET_STATE:
+               return initialState;
           default:
                return state;
      }

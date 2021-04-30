@@ -1,5 +1,5 @@
 import IChat, { IMessage } from '../../types/Chat';
-import { chatUpdateEnum, chatUpdateThunk, chatDeleteThunk, chatFindThunk, UPDATE_CHAT, DELETE_CHAT } from '../enums/chatEnums';
+import { chatUpdateEnum, chatUpdateThunk, chatDeleteThunk, chatFindThunk, UPDATE_CHAT, DELETE_CHAT,CHAT_RESET_STATE } from '../enums/chatEnums';
 import { IChats } from './chats';
 export type { IChat };
 
@@ -12,7 +12,7 @@ export interface ChatState {
 };
 
 export interface ChatAction {
-     type: chatUpdateThunk | chatDeleteThunk | chatFindThunk | UPDATE_CHAT | DELETE_CHAT,
+     type: chatUpdateThunk | chatDeleteThunk | chatFindThunk | UPDATE_CHAT | DELETE_CHAT | CHAT_RESET_STATE,
      payload?: IChat | Error | IChats
 };
 
