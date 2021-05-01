@@ -3,7 +3,7 @@ import axios from '../customAxios'
 
 interface Fe { token: string | null, faceDetecting: boolean, faceRecognition: boolean }
 
-export async function registerNewUserAndGetToken (username: string, password: string, imgBase64: string){
+export async function registerNewUserAndGetToken(username: string, password: string, imgBase64: string) {
      const body = {
           username,
           password,
@@ -26,9 +26,7 @@ export function verifyUserCorrectByFacialRecognitionService(
      callbackSucefully?: (arg0: F) => void, callbackError?: (error: Error) => void
 ): void {
      const obj = {
-          resource: {
-               base64image: imageSrc
-          }
+          base64image: imageSrc
      }
 
      axios.post('/log', obj)
