@@ -1,5 +1,5 @@
 import { UserState, UserAction, IUser } from '../types/users';
-import { updateUserEnumThunk, findUserEnumThunk } from '../enums/userEnum'
+import { updateUserEnumThunk, findUserEnumThunk, USER_RESET_STATE } from '../enums/userEnum'
 
 const initialState: UserState = {
      error: null,
@@ -31,6 +31,9 @@ function reducer(state = initialState, action: UserAction): UserState {
           case updateUserEnumThunk.UPDATE_USER_API_ERROR:
                return { ...state, loading: false, error: action.payload as Error }
 
+
+          case USER_RESET_STATE:
+               return initialState;
           default:
                return state;
      }

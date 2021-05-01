@@ -63,6 +63,7 @@ const SignIn = () => {
                     setTokenLocalStorage(f.token);
                     // cargamos data a redux y la aplicacion
                     const user = await getUserByToken(f.token);
+                    console.log(user);
                     dispatch(findUserApiAction(user._id));
                     dispatch(findChatsApiAction());
                     setView(VIEWS.VIEW_LISTA_CHAT.value);

@@ -30,8 +30,14 @@ export const userExistsFetch = async (username: string) => {
 
 export const getUserByToken = async (token: string) => {
      try {
-          const userExistsFetch = await axiosClient.get('user/', { params: { token } });
+          let body = {
+               token
+          }
+
+          const userExistsFetch = await axiosClient.post('user/', body);
           const { user } = userExistsFetch.data;
+          console.log('user by token: ');
+          console.log(user);
           return user;
      } catch (error) {
           console.log(`Getting user by token. Error ${error.response?.data}`);

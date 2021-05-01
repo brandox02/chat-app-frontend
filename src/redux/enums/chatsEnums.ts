@@ -1,5 +1,8 @@
-export const INSERT_CHAT = 'INSERT_CHAT'
-export type INSERT_CHAT = 'INSERT_CHAT'
+export const INSERT_CHAT = 'INSERT_CHAT';
+export type INSERT_CHAT = 'INSERT_CHAT';
+
+export const CHATS_RESET_STATE = 'CHATS_RESET_STATE';
+export type CHATS_RESET_STATE = 'CHATS_RESET_STATE';
 
 export enum findChatsEnumThunk {
 

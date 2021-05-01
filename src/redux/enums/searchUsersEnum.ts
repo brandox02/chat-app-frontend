@@ -1,6 +1,7 @@
 
 
-
+export const SEARCH_USERS_RESET_STATE = 'SEARCH_USERS_RESET_STATE'
+export type SEARCH_USERS_RESET_STATE = 'SEARCH_USERS_RESET_STATE'
 
 export enum searchUsersEnumThunk {
 
