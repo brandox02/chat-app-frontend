@@ -52,21 +52,25 @@ const SignIn = () => {
                if (!webcamRef.current) throw new Error();
                const imageSrc = webcamRef.current.getScreenshot() as string;
                const f = await registerNewUserAndGetToken(userInput, passInput, imageSrc);
-               console.log(f);
                setLoading(false);
-               if(f?.faceDetecting == false){
-                    alert('no se ha detectado ningun rostro')
-               }else if (f?.faceRecognition) {
-                    alert('Lo sentimos pero ya hay una cuenta que tiene asociada tu cara');
-                    setView(VIEWS.VIEW_LOGIN.value);
-               } else if(f?.token){
-                    setTokenLocalStorage(f.token);
-                    // cargamos data a redux y la aplicacion
-                    const user = await getUserByToken(f.token);
-                    console.log(user);
-                    dispatch(findUserApiAction(user._id));
-                    dispatch(findChatsApiAction());
-                    setView(VIEWS.VIEW_LISTA_CHAT.value);
+               if (f) {
+                    if (f?.faceDetecting == false) {
+                         alert('no se ha detectado ningun rostro')
+                    } else if (f?.faceRecognition) {
+                         alert('Lo sentimos pero ya hay una cuenta que tiene asociada tu cara');
+                         setView(VIEWS.VIEW_LOGIN.value);
+                    } else if (f?.token) {
+                         setTokenLocalStorage(f.token);
+                         // cargamos data a redux y la aplicacion
+                         const user = await getUserByToken(f.token);
+                         console.log(user);
+                         dispatch(findUserApiAction(user._id));
+                         dispatch(findChatsApiAction());
+                         setView(VIEWS.VIEW_LISTA_CHAT.value);
+                    }
+
+               } else {
+                    alert('hubo un problema con la creacion de usuario, contacta con el soporte');
                }
           }
      }
@@ -83,48 +87,48 @@ const SignIn = () => {
                     </div>
                )}
                <div className="card p-4" style={{ width: 420, filter: Loading ? `blur(5px)` : '' }}>
-               <h2 className='mb-4'>Crear Cuenta</h2>
-               <Webcam
-                    ref={webcamRef}
-                    audio={false}
-                    screenshotFormat="image/jpeg"
-                    className='w-100'
+                    <h2 className='mb-4'>Crear Cuenta</h2>
+                    <Webcam
+                         ref={webcamRef}
+                         audio={false}
+                         screenshotFormat="image/jpeg"
+                         className='w-100'
 
-               />
-               <span className='text-center'>Mira a la camara, trata de que solo se vea tu cara y de que halla luz cuando des a iniciar sesion</span>
-               {/* username */}
-               <div className='p-1'>
-                    <label className='mr-3'>Usuario</label>
-                    <input
-                         className={`form-control ${userValidationSign.bootstrapStyleInput} ${userValidationSign.bootstrapStyleInput}`}
-                         type="text"
-                         value={userInput} onChange={(e) => userInputHandler(e.currentTarget.value)}
                     />
-                    <span style={{ color: '#F94D4D' }}>{userValidationSign.messageError}</span>
-               </div>
-               {/* PASSWORD */}
-               <div className='p-1'>
-                    <label className='mr-3'>Contrasena</label>
-                    <input
-                         className={`form-control ${passValidationSign.bootstrapStyleInput}`}
-                         type="password" value={passInput}
-                         onChange={(e) => setPassInput(e.currentTarget.value)}
-                    />
-                    <span style={{ color: '#F94D4D' }}>{passValidationSign.messageError}</span>
-               </div>
-               {/* BUTTON */}
-               <div className='mt-3 d-flex justify-content-center'>
-                    <button onClick={submit} className="btn btn-primary">Crear la cuenta</button>
-               </div>
-               {/* INICIAR SESION - REGISTRARSE */}
-               <div className='mb-3 d-flex justify-content-center' >
-                    <span
-                         className='nav-link active hover' onClick={setToLogin}
-                         style={{ position: 'absolute', bottom: 0 }}>
-                         Iniciar Sesion
+                    <span className='text-center'>Mira a la camara, trata de que solo se vea tu cara y de que halla luz cuando des a iniciar sesion</span>
+                    {/* username */}
+                    <div className='p-1'>
+                         <label className='mr-3'>Usuario</label>
+                         <input
+                              className={`form-control ${userValidationSign.bootstrapStyleInput} ${userValidationSign.bootstrapStyleInput}`}
+                              type="text"
+                              value={userInput} onChange={(e) => userInputHandler(e.currentTarget.value)}
+                         />
+                         <span style={{ color: '#F94D4D' }}>{userValidationSign.messageError}</span>
+                    </div>
+                    {/* PASSWORD */}
+                    <div className='p-1'>
+                         <label className='mr-3'>Contrasena</label>
+                         <input
+                              className={`form-control ${passValidationSign.bootstrapStyleInput}`}
+                              type="password" value={passInput}
+                              onChange={(e) => setPassInput(e.currentTarget.value)}
+                         />
+                         <span style={{ color: '#F94D4D' }}>{passValidationSign.messageError}</span>
+                    </div>
+                    {/* BUTTON */}
+                    <div className='mt-3 d-flex justify-content-center'>
+                         <button onClick={submit} className="btn btn-primary">Crear la cuenta</button>
+                    </div>
+                    {/* INICIAR SESION - REGISTRARSE */}
+                    <div className='mb-3 d-flex justify-content-center' >
+                         <span
+                              className='nav-link active hover' onClick={setToLogin}
+                              style={{ position: 'absolute', bottom: 0 }}>
+                              Iniciar Sesion
                          </span>
+                    </div>
                </div>
-          </div>
           </div >
      )
 }
