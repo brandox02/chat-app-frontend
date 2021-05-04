@@ -1,7 +1,8 @@
 import { AxiosResponse } from 'axios';
 import axios from '../customAxios'
+import IUser from '../types/User';
 
-interface Fe { token: string | null, faceDetecting: boolean, faceRecognition: boolean }
+interface Fe { token: string, user: IUser }
 
 export async function registerNewUserAndGetToken(username: string, password: string, imgBase64: string) {
      const body = {

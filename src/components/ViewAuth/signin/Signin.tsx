@@ -47,33 +47,29 @@ const SignIn = () => {
      const setToLogin = () => setView(VIEWS.VIEW_LOGIN.value);
 
      const submit = async () => {
-          setLoading(true);
+          setUserInput('');
+          setPassInput('')
           if (userValidationSign.messageError === '' && userValidationSign.messageError === '' && userInput !== '' && passInput !== '') {
-               if (!webcamRef.current) throw new Error();
-               const imageSrc = webcamRef.current.getScreenshot() as string;
-               const f = await registerNewUserAndGetToken(userInput, passInput, imageSrc);
-               setLoading(false);
+               setLoading(true);
+               // const imageSrc = webcamRef.current.getScreenshot() as string;
+               const f = await registerNewUserAndGetToken(userInput, passInput, 'ninguna');
                if (f) {
-                    if (f?.faceDetecting == false) {
-                         alert('no se ha detectado ningun rostro')
-                    } else if (f?.faceRecognition) {
-                         alert('Lo sentimos pero ya hay una cuenta que tiene asociada tu cara');
-                         setView(VIEWS.VIEW_LOGIN.value);
-                    } else if (f?.token) {
-                         setTokenLocalStorage(f.token);
-                         // cargamos data a redux y la aplicacion
-                         const user = await getUserByToken(f.token);
-                         console.log(user);
-                         dispatch(findUserApiAction(user._id));
-                         dispatch(findChatsApiAction());
-                         setView(VIEWS.VIEW_LISTA_CHAT.value);
-                    }
 
+                    setTokenLocalStorage(f?.token);
+                    setLoading(false);
+                    dispatch(findUserApiAction(f.user._id as string));
+                    dispatch(findChatsApiAction());
+                    setView(VIEWS.VIEW_LISTA_CHAT.value);
                } else {
-                    alert('hubo un problema con la creacion de usuario, contacta con el soporte');
+                    alert('Hubo un error con la creacion del usuario');
                }
+
+
+          } else {
+               alert('Mira las validaciones');
           }
      }
+
 
      return (
           <div className='d-flex justify-content-center align-items-center w-100 vh-100' style={{ backgroundColor: '#F6F6F6' }}>
@@ -88,14 +84,14 @@ const SignIn = () => {
                )}
                <div className="card p-4" style={{ width: 420, filter: Loading ? `blur(5px)` : '' }}>
                     <h2 className='mb-4'>Crear Cuenta</h2>
-                    <Webcam
+                    {/* <Webcam
                          ref={webcamRef}
                          audio={false}
                          screenshotFormat="image/jpeg"
                          className='w-100'
 
-                    />
-                    <span className='text-center'>Mira a la camara, trata de que solo se vea tu cara y de que halla luz cuando des a iniciar sesion</span>
+                    /> */}
+                    {/* <span className='text-center'>Mira a la camara, trata de que solo se vea tu cara y de que halla luz cuando des a iniciar sesion</span> */}
                     {/* username */}
                     <div className='p-1'>
                          <label className='mr-3'>Usuario</label>

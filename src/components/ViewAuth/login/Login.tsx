@@ -123,21 +123,21 @@ const Login = () => {
                               />
                          </div>
                          {/* BUTTON */}
-                         <div className='mt-5 d-flex justify-content-between mt-2'>
-                              <a
+                         <div className='mt-5 d-flex justify-content-center mt-2'>
+                              {/* <a
                                    className='link-info hover'
                                    onClick={switchFacialReconitionAndLoginWithCredentialsViews}
-                              >Reconocimiento Facial</a>
-                              <button onClick={submit} className="btn btn-primary">Iniciar Sesion</button>
-                         </div>
-                         {/* INICIAR SESION  */}
-                         <div className='d-flex justify-content-center' >
+                              >Reconocimiento Facial</a> */}
                               <span
                                    className='link-info hover' onClick={setToSignIn}
                                    style={{ position: 'absolute', bottom: 10 }}>
                                    Crear Cuenta
-                         </span>
+                              </span>
+                              <button onClick={submit} className="btn btn-primary">Iniciar Sesion</button>
                          </div>
+                         {/* INICIAR SESION 
+                         <div className='d-flex justify-content-center' >
+                         </div> */}
                     </div>
                </div >
           )}</>
